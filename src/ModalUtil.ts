@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ModalRef } from './Modal';
+import { ModalRef } from './ModalProvider';
 
 /**
  * Must set at top <Modal ref={ModalRef}>
@@ -11,7 +11,7 @@ export const modalRef = React.createRef<ModalRef>();
 export const ModalUtil = {
   add: (children: React.ReactNode, key?: string) =>
     modalRef.current?.add(children, key),
-  remove: () => modalRef.current?.remove(),
+  remove: (key: string) => modalRef.current?.remove(key),
   removeAll: () => modalRef.current?.removeAll(),
   isExist: (key: string) => modalRef.current?.isExist(key),
 };

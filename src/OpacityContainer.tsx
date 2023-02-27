@@ -17,7 +17,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useModal } from './Modal';
+import { useModal } from './ModalProvider';
 import { AnimationContainerProps } from './type';
 
 interface OpacityContainerProps extends AnimationContainerProps {}
@@ -80,15 +80,15 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     );
 
     return (
-      <View style={styles.Modal}>
+      <View style={styles.modal}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.Modal}
+          style={styles.modal}
           onPress={handleClickMask}
         >
           <Animated.View
             pointerEvents={pointerEvents}
-            style={[styles.Modal, animationStyle]}
+            style={[styles.modal, animationStyle]}
           />
         </TouchableOpacity>
         <View
@@ -103,7 +103,7 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  Modal: {
+  modal: {
     ...StyleSheet.absoluteFillObject,
   },
   container: {

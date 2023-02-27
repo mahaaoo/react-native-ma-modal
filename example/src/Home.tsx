@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import {
   useModal,
@@ -8,6 +9,7 @@ import {
   OpacityContainer,
   DrawerContainer,
   ScaleContainer,
+  Modal,
 } from 'react-native-ma-modal';
 import Button from './Button';
 import Section from './Section';
@@ -17,19 +19,20 @@ const { width, height } = Dimensions.get('window');
 export default function OverlayExample() {
   const { add, remove, removeAll } = useModal();
   const elementIndex = React.useRef(0);
+  const [isVisible, setVisible] = useState(false);
 
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.paddingBottom}
     >
-      <Section title="关闭视图">
+      <Section title="Close Modal">
         <Button
           onPress={() => {
             remove();
           }}
         >
-          <Text>删除最近添加的一个子视图</Text>
+          <Text>Delete Modal</Text>
         </Button>
         <Button
           style={styles.marginLeft}
@@ -37,11 +40,11 @@ export default function OverlayExample() {
             removeAll();
           }}
         >
-          <Text>删除全部子视图</Text>
+          <Text>Delete All Modal</Text>
         </Button>
       </Section>
 
-      <Section title="自定义视图">
+      <Section title="Self Modal">
         <Button
           onPress={() => {
             const index = add(
@@ -62,7 +65,7 @@ export default function OverlayExample() {
             elementIndex.current++;
           }}
         >
-          <Text>自定义子视图-hook</Text>
+          <Text>sub-modal-hook</Text>
         </Button>
         <Button
           style={styles.marginLeft}
@@ -85,7 +88,7 @@ export default function OverlayExample() {
             elementIndex.current++;
           }}
         >
-          <Text>自定义子视图-function</Text>
+          <Text>sub-modal-function</Text>
         </Button>
       </Section>
 
@@ -164,7 +167,7 @@ export default function OverlayExample() {
             elementIndex.current++;
           }}
         >
-          <Text>点击遮罩关闭</Text>
+          <Text>mask-close</Text>
         </Button>
         <Button
           style={styles.marginLeft}
@@ -195,7 +198,7 @@ export default function OverlayExample() {
             elementIndex.current++;
           }}
         >
-          <Text>遮罩不可点</Text>
+          <Text>mask-no-close</Text>
         </Button>
         <Button
           style={styles.marginLeft}
@@ -227,7 +230,7 @@ export default function OverlayExample() {
             elementIndex.current++;
           }}
         >
-          <Text>无遮罩</Text>
+          <Text>no-mask</Text>
         </Button>
       </Section>
 
@@ -630,6 +633,32 @@ export default function OverlayExample() {
           <Text>Scale-Close</Text>
         </Button>
       </Section>
+      <Section title="Modal-Component">
+        <Modal isVisible={isVisible}>
+          <ScaleContainer modal={true}>
+            <View style={styles.scaleContainer}>
+              <Text>子视图{elementIndex.current}</Text>
+              <Text
+                onPress={() => {
+                  setVisible(false)
+                }}
+                style={styles.close}
+              >
+                关闭
+              </Text>
+            </View>
+          </ScaleContainer>
+        </Modal>
+        <Button
+          onPress={() => {
+            setVisible(true)
+            elementIndex.current++;
+          }}
+        >
+          <Text>Modal-Component</Text>
+        </Button>
+      </Section>
+
     </ScrollView>
   );
 }

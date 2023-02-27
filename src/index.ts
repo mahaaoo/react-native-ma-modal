@@ -1,4 +1,4 @@
-import Modal, { useModal } from './Modal';
+import ModalProvider, { useModal } from './ModalProvider';
 
 import NormalContainer from './NormalContainer';
 import OpacityContainer, {
@@ -11,13 +11,12 @@ import DrawerContainer, {
   DrawerContainerRef,
 } from './DrawerContainer';
 import ScaleContainer from './ScaleContainer';
-
 import { BaseContainerProps, AnimationContainerProps } from './type';
-
 import { modalRef, ModalUtil } from './ModalUtil';
+import Modal from './Modal';
 
 export {
-  Modal,
+  ModalProvider,
   useModal,
   modalRef,
   ModalUtil,
@@ -31,4 +30,5 @@ export {
   BaseContainerProps,
   AnimationContainerProps,
   DrawerContainerRef,
+  Modal,
 };

@@ -29,7 +29,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { clamp, snapPoint } from './ModalUtil';
-import { useModal } from './Modal';
+import { useModal } from './ModalProvider';
 import { AnimationContainerProps } from './type';
 
 const { width, height } = Dimensions.get('window');
@@ -64,7 +64,7 @@ const TranslateContainer = forwardRef<
     onAppear,
     onDisappear,
     mask = true,
-    duration = 400,
+    duration = 250,
     modal = false,
     onClickMask,
     pointerEvents = 'auto',
@@ -303,7 +303,7 @@ const TranslateContainer = forwardRef<
   return (
     <View style={styles.mask}>
       <TouchableWithoutFeedback
-        style={styles.Modal}
+        style={styles.modal}
         onPress={handleClickMask}
       >
         <Animated.View
@@ -313,7 +313,7 @@ const TranslateContainer = forwardRef<
       </TouchableWithoutFeedback>
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          style={[styles.Modal, initialPosition, animationStyle]}
+          style={[styles.modal, initialPosition, animationStyle]}
         >
           <View style={[styles.container, containerStyle]} onLayout={onLayout}>
             {children}
@@ -325,7 +325,7 @@ const TranslateContainer = forwardRef<
 });
 
 const styles = StyleSheet.create({
-  Modal: {
+  modal: {
     position: 'absolute',
     zIndex: 99,
   },

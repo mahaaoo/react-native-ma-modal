@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
-import { useModal } from './Modal';
+import { useModal } from './ModalProvider';
 import { BaseContainerProps } from './type';
 
 export interface DrawerContainerRef {
@@ -95,7 +95,7 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
 
     return (
       <View style={styles.mask}>
-        <Animated.View style={[styles.Modal, initialPosition]}>
+        <Animated.View style={[styles.modal, initialPosition]}>
           <View style={[styles.container, containerStyle]} onLayout={onLayout}>
             {children}
           </View>
@@ -106,7 +106,7 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  Modal: {
+  modal: {
     position: 'absolute',
   },
   mask: {

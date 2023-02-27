@@ -23,7 +23,7 @@ const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>(
     }, [onAppear, onDisappear]);
 
     return (
-      <View style={styles.Modal}>
+      <View style={styles.modal}>
         <View style={[styles.container, containerStyle]}>{children}</View>
       </View>
     );
@@ -31,7 +31,7 @@ const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  Modal: {
+  modal: {
     ...StyleSheet.absoluteFillObject,
   },
   container: {

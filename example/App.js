@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { Modal, modalRef } from 'react-native-ma-modal';
+import { ModalProvider, modalRef } from 'react-native-ma-modal';
 
 import { navigationRef } from './src/navigate';
 import Index from './src/app';
@@ -11,11 +11,11 @@ import Index from './src/app';
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Modal ref={modalRef}>
+      <ModalProvider ref={modalRef}>
         <NavigationContainer ref={navigationRef}>
           <Index />
         </NavigationContainer>
-      </Modal>
+      </ModalProvider>
     </GestureHandlerRootView>
   );
 }

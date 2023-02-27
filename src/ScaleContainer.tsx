@@ -13,7 +13,7 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { useModal } from './Modal';
+import { useModal } from './ModalProvider';
 
 import { AnimationContainerProps } from './type';
 
@@ -95,15 +95,15 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
     );
 
     return (
-      <View style={styles.Modal}>
+      <View style={styles.modal}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.Modal}
+          style={styles.modal}
           onPress={handleClickMask}
         >
           <Animated.View
             pointerEvents={pointerEvents}
-            style={[styles.Modal, animationStyle]}
+            style={[styles.modal, animationStyle]}
           />
         </TouchableOpacity>
         <Animated.View
@@ -118,7 +118,7 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  Modal: {
+  modal: {
     ...StyleSheet.absoluteFillObject,
   },
   container: {
