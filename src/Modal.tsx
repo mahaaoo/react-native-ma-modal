@@ -1,12 +1,12 @@
 /**
- * Overlay can display Component like Modal from 'react-native'
+ * Modal can display Component like Modal from 'react-native'
  * the Component will be push to Array, render at outermost layer
- * there are two way can use Overlay:
- * in component, can use useOverlay() hook
- * in function, can use OverlayUtil
+ * there are two way can use Modal:
+ * in component, can use useModal() hook
+ * in function, can use ModalUtil
  *
- * Overlay offer WrapperComponent, some of them contains animation, like DrawerContainer、TranslateContainer
- * Overlay also accepts customize component, if offer unMount function, it will be invoked before remove
+ * Modal offer WrapperComponent, some of them contains animation, like DrawerContainer、TranslateContainer
+ * Modal also accepts customize component, if offer unMount function, it will be invoked before remove
  */
 import React, {
   createContext,
@@ -22,10 +22,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { useForceUpdate } from './OverlayUtil';
+import { useForceUpdate } from './ModalUtil';
 import { RootAnimationType, configAnimation } from './RootViewAnimations';
 
-export interface OverlayRef {
+export interface ModalRef {
   /**
    * Add a componet to window,
    * If you set key, this components is unique,
@@ -49,16 +49,16 @@ export interface OverlayRef {
   isExist: (key: string) => boolean;
 }
 
-export interface OverlayContextProps extends OverlayRef {
+export interface ModalContextProps extends ModalRef {
   initialValue: Animated.SharedValue<number>;
   progress: Animated.SharedValue<number>;
   targetValue: Animated.SharedValue<number>;
 }
 
-export const OverlayContext = createContext({} as OverlayContextProps);
-export const useOverlay = () => useContext(OverlayContext);
+export const ModalContext = createContext({} as ModalContextProps);
+export const useModal = () => useContext(ModalContext);
 
-interface OverlayProps {
+interface ModalProps {
   children: React.ReactNode;
 }
 
@@ -68,7 +68,7 @@ interface ElementType {
   ref: any;
 }
 
-const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
+const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
   const { children } = props;
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
   const { forceUpdate } = useForceUpdate();
@@ -86,9 +86,9 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
 
   /**
    * When call this function with key, the component will be unique
-   * Otherwise, Overlay will add key automatic，key will one by one And save at elementsIndex
+   * Otherwise, Modal will add key automatic，key will one by one And save at elementsIndex
    */
-  const addNodeToOverlay = useCallback(
+  const addNodeToModal = useCallback(
     (node: any, key?: string) => {
       if (node.props?.rootAnimation) {
         setMainViewAnimation(node.props?.rootAnimation);
@@ -113,7 +113,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
        * Before add compoonet to window, there are some props must handle
        * ref: in order to call unMount animation, the component if not have, will be create
        * innerKey: in order to support componet remove itself
-       * onDisappear: when componet after be removed, forceUpdate Overlay to real delete
+       * onDisappear: when componet after be removed, forceUpdate Modal to real delete
        */
       let nodeRef;
       if (!!node && !!node.ref) {
@@ -123,7 +123,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
       }
 
       const onDisappear = node?.props?.onDisappear;
-      const inner_key = key || 'overlay' + (elementsIndex.current + 1);
+      const inner_key = key || 'Modal' + (elementsIndex.current + 1);
       elements.current.push({
         element: React.cloneElement(node, {
           ref: nodeRef,
@@ -151,7 +151,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
    * Remove componet by key
    * If not set key, the function will remove the latest component
    */
-  const deleteNodeFromOverlay = useCallback(
+  const deleteNodeFromModal = useCallback(
     (key?: string) => {
       let deleteElement;
       if (!!key && key?.length > 0) {
@@ -185,7 +185,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   /**
    * Remove all components without Animation
    */
-  const deleteAllNodeFromOverlay = useCallback(() => {
+  const deleteAllNodeFromModal = useCallback(() => {
     elements.current = [];
     forceUpdate();
   }, []);
@@ -209,9 +209,9 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   useImperativeHandle(
     ref,
     () => ({
-      add: addNodeToOverlay,
-      remove: deleteNodeFromOverlay,
-      removeAll: deleteAllNodeFromOverlay,
+      add: addNodeToModal,
+      remove: deleteNodeFromModal,
+      removeAll: deleteAllNodeFromModal,
       isExist,
     }),
     []
@@ -219,11 +219,11 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
 
   return (
     <View style={styles.container}>
-      <OverlayContext.Provider
+      <ModalContext.Provider
         value={{
-          add: addNodeToOverlay,
-          remove: deleteNodeFromOverlay,
-          removeAll: deleteAllNodeFromOverlay,
+          add: addNodeToModal,
+          remove: deleteNodeFromModal,
+          removeAll: deleteAllNodeFromModal,
           isExist,
           initialValue,
           progress,
@@ -247,13 +247,13 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
             <View
               key={node.key}
               pointerEvents={pointerEvents}
-              style={[styles.overlay, extraStyle]}
+              style={[styles.Modal, extraStyle]}
             >
               {node.element}
             </View>
           );
         })}
-      </OverlayContext.Provider>
+      </ModalContext.Provider>
     </View>
   );
 });
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   mainViewStyle: {
     flex: 1,
   },
-  overlay: {
+  Modal: {
     ...StyleSheet.absoluteFillObject,
   },
   loadingContainer: {
@@ -277,4 +277,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Overlay;
+export default Modal;

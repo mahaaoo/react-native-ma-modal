@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import {
-  useOverlay,
-  OverlayUtil,
+  useModal,
+  ModalUtil,
   TranslateContainer,
   NormalContainer,
   OpacityContainer,
@@ -15,7 +15,7 @@ import Section from './Section';
 const { width, height } = Dimensions.get('window');
 
 export default function OverlayExample() {
-  const { add, remove, removeAll } = useOverlay();
+  const { add, remove, removeAll } = useModal();
   const elementIndex = React.useRef(0);
 
   return (
@@ -67,7 +67,7 @@ export default function OverlayExample() {
         <Button
           style={styles.marginLeft}
           onPress={() => {
-            const index = OverlayUtil.add(
+            const index = ModalUtil.add(
               <View style={styles.marginTop}>
                 <Text style={styles.childText}>
                   子视图{elementIndex.current}
@@ -235,7 +235,7 @@ export default function OverlayExample() {
         <View style={styles.row}>
           <Button
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
@@ -252,7 +252,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer from="top">
                   <View style={styles.top}>
                     <Text style={styles.childText}>
@@ -269,7 +269,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer from="left">
                   <View style={styles.left}>
                     <Text style={styles.childText}>
@@ -287,7 +287,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer from="right">
                   <View style={styles.left}>
                     <Text style={styles.childText}>
@@ -305,7 +305,7 @@ export default function OverlayExample() {
         <View style={styles.viewContainer}>
           <Button
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer gesture={true}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
@@ -322,7 +322,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer from="left" gesture={true}>
                   <View style={styles.left}>
                     <Text style={styles.childText}>
@@ -341,7 +341,7 @@ export default function OverlayExample() {
         <View style={styles.viewContainer}>
           <Button
             onPress={() => {
-              const index = OverlayUtil.add(
+              const index = ModalUtil.add(
                 <TranslateContainer modal={true}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
@@ -366,7 +366,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer mask={false}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
@@ -384,7 +384,7 @@ export default function OverlayExample() {
         <View style={styles.viewContainer}>
           <Button
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer rootAnimation={'scale'} gesture={true}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
@@ -401,7 +401,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer
                   from="left"
                   gesture={true}
@@ -423,7 +423,7 @@ export default function OverlayExample() {
         <View style={styles.viewContainer}>
           <Button
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer rootAnimation={'rotateX'} gesture={true}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
@@ -441,7 +441,7 @@ export default function OverlayExample() {
         <View style={styles.viewContainer}>
           <Button
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer
                   from="left"
                   gesture={true}
@@ -462,7 +462,7 @@ export default function OverlayExample() {
           <Button
             style={styles.marginLeft}
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer
                   from="right"
                   gesture={true}
@@ -484,7 +484,7 @@ export default function OverlayExample() {
         <View style={styles.viewContainer}>
           <Button
             onPress={() => {
-              OverlayUtil.add(
+              ModalUtil.add(
                 <TranslateContainer
                   from="left"
                   gesture={true}
@@ -508,7 +508,7 @@ export default function OverlayExample() {
       <Section title="DrawerContainer">
         <Button
           onPress={() => {
-            const index = OverlayUtil.add(
+            const index = ModalUtil.add(
               <DrawerContainer
                 rootAnimation={'scaleAndtranslateX'}
                 position="left"
@@ -537,7 +537,7 @@ export default function OverlayExample() {
         <Button
           style={styles.marginLeft}
           onPress={() => {
-            const index = OverlayUtil.add(
+            const index = ModalUtil.add(
               <DrawerContainer rootAnimation={'translateX'} position="right">
                 <View style={styles.right}>
                   <Text style={styles.childText}>
@@ -563,7 +563,7 @@ export default function OverlayExample() {
         <Button
           style={styles.marginLeft}
           onPress={() => {
-            const index = OverlayUtil.add(
+            const index = ModalUtil.add(
               <DrawerContainer
                 rootPointerEvents="none"
                 rootAnimation={'scaleAndtranslateX'}

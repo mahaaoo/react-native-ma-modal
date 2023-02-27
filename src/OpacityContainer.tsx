@@ -1,5 +1,5 @@
 /**
- * if use this componet wrapper overlay componet
+ * if use this componet wrapper Modal componet
  * onAppear will be called when it mount,
  * onDisappear will be called when it unMount
  * when it mount, will play opacity animation
@@ -17,7 +17,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useOverlay } from './Overlay';
+import { useModal } from './Modal';
 import { AnimationContainerProps } from './type';
 
 interface OpacityContainerProps extends AnimationContainerProps {}
@@ -40,7 +40,7 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
       innerKey,
       containerStyle,
     } = props;
-    const { remove } = useOverlay();
+    const { remove } = useModal();
     const opacity = useSharedValue(0);
 
     useEffect(() => {
@@ -80,15 +80,15 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     );
 
     return (
-      <View style={styles.overlay}>
+      <View style={styles.Modal}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.overlay}
+          style={styles.Modal}
           onPress={handleClickMask}
         >
           <Animated.View
             pointerEvents={pointerEvents}
-            style={[styles.overlay, animationStyle]}
+            style={[styles.Modal, animationStyle]}
           />
         </TouchableOpacity>
         <View
@@ -103,7 +103,7 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  overlay: {
+  Modal: {
     ...StyleSheet.absoluteFillObject,
   },
   container: {

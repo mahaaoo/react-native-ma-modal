@@ -1,5 +1,5 @@
 /**
- * if use this componet wrapper overlay componet
+ * if use this componet wrapper Modal componet
  * onAppear will be called when it mount,
  * onDisappear will be called when it unMount
  * when it mount, will play translate animation
@@ -28,8 +28,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { clamp, snapPoint } from './OverlayUtil';
-import { useOverlay } from './Overlay';
+import { clamp, snapPoint } from './ModalUtil';
+import { useModal } from './Modal';
 import { AnimationContainerProps } from './type';
 
 const { width, height } = Dimensions.get('window');
@@ -72,7 +72,7 @@ const TranslateContainer = forwardRef<
     containerStyle,
     gesture = false,
   } = props;
-  const { remove, progress, targetValue } = useOverlay();
+  const { remove, progress, targetValue } = useModal();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -127,7 +127,7 @@ const TranslateContainer = forwardRef<
   );
 
   /**
-   * After Component has created by Overlay, this funtion will move the component to destination
+   * After Component has created by Modal, this funtion will move the component to destination
    * Just a animation not created
    */
   const mount = useCallback(
@@ -233,7 +233,7 @@ const TranslateContainer = forwardRef<
     }
   }, [from]);
 
-  // invoke useOverlay remove by key
+  // invoke useModal remove by key
   const removeSelf = useCallback(() => {
     remove(innerKey);
   }, [remove, innerKey]);
@@ -303,7 +303,7 @@ const TranslateContainer = forwardRef<
   return (
     <View style={styles.mask}>
       <TouchableWithoutFeedback
-        style={styles.overlay}
+        style={styles.Modal}
         onPress={handleClickMask}
       >
         <Animated.View
@@ -313,7 +313,7 @@ const TranslateContainer = forwardRef<
       </TouchableWithoutFeedback>
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          style={[styles.overlay, initialPosition, animationStyle]}
+          style={[styles.Modal, initialPosition, animationStyle]}
         >
           <View style={[styles.container, containerStyle]} onLayout={onLayout}>
             {children}
@@ -325,7 +325,7 @@ const TranslateContainer = forwardRef<
 });
 
 const styles = StyleSheet.create({
-  overlay: {
+  Modal: {
     position: 'absolute',
     zIndex: 99,
   },

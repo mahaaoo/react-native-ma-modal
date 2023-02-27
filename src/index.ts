@@ -1,4 +1,4 @@
-import Overlay, { useOverlay } from './Overlay';
+import Modal, { useModal } from './Modal';
 
 import NormalContainer from './NormalContainer';
 import OpacityContainer, {
@@ -14,13 +14,13 @@ import ScaleContainer from './ScaleContainer';
 
 import { BaseContainerProps, AnimationContainerProps } from './type';
 
-import { overlayRef, OverlayUtil } from './OverlayUtil';
+import { modalRef, ModalUtil } from './ModalUtil';
 
 export {
-  Overlay,
-  useOverlay,
-  overlayRef,
-  OverlayUtil,
+  Modal,
+  useModal,
+  modalRef,
+  ModalUtil,
   NormalContainer,
   OpacityContainer,
   TranslateContainer,

@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { OverlayRef } from './Overlay';
+import { ModalRef } from './Modal';
 
 /**
- * Must set at top <Overlay ref={overlayRef}>
- * OverlayUtil is just another way to invoke useOverlay
+ * Must set at top <Modal ref={ModalRef}>
+ * ModalUtil is just another way to invoke useModal
  * Can be used at out of FunctionComponent
  */
-export const overlayRef = React.createRef<OverlayRef>();
+export const modalRef = React.createRef<ModalRef>();
 
-export const OverlayUtil = {
+export const ModalUtil = {
   add: (children: React.ReactNode, key?: string) =>
-    overlayRef.current?.add(children, key),
-  remove: () => overlayRef.current?.remove(),
-  removeAll: () => overlayRef.current?.removeAll(),
-  isExist: (key: string) => overlayRef.current?.isExist(key),
+    modalRef.current?.add(children, key),
+  remove: () => modalRef.current?.remove(),
+  removeAll: () => modalRef.current?.removeAll(),
+  isExist: (key: string) => modalRef.current?.isExist(key),
 };
 
 /**

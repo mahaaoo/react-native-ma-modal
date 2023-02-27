@@ -18,9 +18,9 @@ const App: React.FC<{}> = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
+        name="Modal"
         component={Home}
-        options={{ headerTitle: 'Home', ...headerOptions }}
+        options={{ headerTitle: 'Modal', ...headerOptions }}
       />
     </Stack.Navigator>
   );

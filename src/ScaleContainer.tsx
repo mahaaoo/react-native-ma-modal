@@ -13,7 +13,7 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { useOverlay } from './Overlay';
+import { useModal } from './Modal';
 
 import { AnimationContainerProps } from './type';
 
@@ -37,7 +37,7 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
       modal = false,
       innerKey,
     } = props;
-    const { remove } = useOverlay();
+    const { remove } = useModal();
     const opacity = useSharedValue(0);
     const scale = useSharedValue(0.5);
 
@@ -95,15 +95,15 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
     );
 
     return (
-      <View style={styles.overlay}>
+      <View style={styles.Modal}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.overlay}
+          style={styles.Modal}
           onPress={handleClickMask}
         >
           <Animated.View
             pointerEvents={pointerEvents}
-            style={[styles.overlay, animationStyle]}
+            style={[styles.Modal, animationStyle]}
           />
         </TouchableOpacity>
         <Animated.View
@@ -118,7 +118,7 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  overlay: {
+  Modal: {
     ...StyleSheet.absoluteFillObject,
   },
   container: {

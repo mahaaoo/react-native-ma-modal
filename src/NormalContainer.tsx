@@ -1,5 +1,5 @@
 /**
- * if use this componet wrapper overlay componet
+ * if use this componet wrapper Modal componet
  * onAppear will be called when it mount,
  * onDisappear will be called when it unMount
  */
@@ -23,7 +23,7 @@ const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>(
     }, [onAppear, onDisappear]);
 
     return (
-      <View style={styles.overlay}>
+      <View style={styles.Modal}>
         <View style={[styles.container, containerStyle]}>{children}</View>
       </View>
     );
@@ -31,7 +31,7 @@ const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  overlay: {
+  Modal: {
     ...StyleSheet.absoluteFillObject,
   },
   container: {

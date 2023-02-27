@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
-import { useOverlay } from './Overlay';
+import { useModal } from './Modal';
 import { BaseContainerProps } from './type';
 
 export interface DrawerContainerRef {
@@ -34,7 +34,7 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
       onDisappear,
     } = props;
 
-    const { targetValue, progress } = useOverlay();
+    const { targetValue, progress } = useModal();
 
     const onLayout = useCallback(
       ({
@@ -95,7 +95,7 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
 
     return (
       <View style={styles.mask}>
-        <Animated.View style={[styles.overlay, initialPosition]}>
+        <Animated.View style={[styles.Modal, initialPosition]}>
           <View style={[styles.container, containerStyle]} onLayout={onLayout}>
             {children}
           </View>
@@ -106,7 +106,7 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
 );
 
 const styles = StyleSheet.create({
-  overlay: {
+  Modal: {
     position: 'absolute',
   },
   mask: {
