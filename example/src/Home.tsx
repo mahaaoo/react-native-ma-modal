@@ -240,7 +240,7 @@ export default function OverlayExample() {
             onPress={() => {
               ModalUtil.add(
                 <TranslateContainer>
-                  <View style={styles.bottom}>
+                  <View style={[styles.bottom, { height: height - 150 }]}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -346,7 +346,7 @@ export default function OverlayExample() {
             onPress={() => {
               const index = ModalUtil.add(
                 <TranslateContainer modal={true}>
-                  <View style={styles.bottom}>
+                  <View style={[styles.bottom, { height: 432 }]}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -389,7 +389,7 @@ export default function OverlayExample() {
             onPress={() => {
               ModalUtil.add(
                 <TranslateContainer rootAnimation={'scale'} gesture={true}>
-                  <View style={styles.bottom}>
+                  <View style={[styles.bottom, { height: height - 88, borderTopRightRadius: 10, borderTopLeftRadius: 10 }]}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
