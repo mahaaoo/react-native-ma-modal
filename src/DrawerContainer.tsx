@@ -35,7 +35,6 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
       onDisappear,
     } = props;
 
-
     const onLayout = useCallback(
       ({
         nativeEvent: {

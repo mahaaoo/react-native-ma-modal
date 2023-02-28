@@ -71,7 +71,6 @@ export const ModalElements = forwardRef<ModalElementsRef, ModalElementsProps>((p
     []
   );
 
-
   return (
     <ModalAnimatedContext.Provider value={{
       config,

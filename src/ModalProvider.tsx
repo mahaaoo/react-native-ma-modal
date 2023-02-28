@@ -61,7 +61,6 @@ const ModalProvider = forwardRef<ModalRef, ModalProviderProps>((props, ref) => {
   const { children, config } = props;
 
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
-  // const { forceUpdate } = useForceUpdate();
   const elementsIndex = useRef<number>(0);
 
   const initialValue = useSharedValue(0);
