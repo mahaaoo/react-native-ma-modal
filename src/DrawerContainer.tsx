@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
-import { useModal } from './ModalProvider';
+import { useModalAnimated } from './ModalElements';
 import { BaseContainerProps } from './type';
 
 export interface DrawerContainerRef {
@@ -25,16 +25,16 @@ interface DrawerContainerProps extends BaseContainerProps {
 
 const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
   (props, ref) => {
+    const { targetValue, progress, config } = useModalAnimated();
     const {
       position,
-      duration = 250,
+      duration = config.duration,
       onAppear,
       containerStyle,
       children,
       onDisappear,
     } = props;
 
-    const { targetValue, progress } = useModal();
 
     const onLayout = useCallback(
       ({

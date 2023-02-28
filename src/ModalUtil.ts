@@ -17,7 +17,7 @@ export const ModalUtil = {
 };
 
 /**
- * make UI refresh immediately
+ * refresh immediately
  * @returns () => void
  * usage:
  * const { forceUpdate } = useForceUpdate();

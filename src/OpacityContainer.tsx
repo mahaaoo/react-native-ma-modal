@@ -18,6 +18,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useModal } from './ModalProvider';
+import { useModalAnimated } from './ModalElements'
 import { AnimationContainerProps } from './type';
 
 interface OpacityContainerProps extends AnimationContainerProps {}
@@ -28,19 +29,22 @@ export interface OpacityContainerRef {
 
 const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
   (props, ref) => {
+    const {config} = useModalAnimated();
     const {
       children,
       onAppear,
       onDisappear,
       mask = true,
-      duration = 250,
+      duration = config.duration,
       modal = false,
       onClickMask,
       pointerEvents = 'auto',
       innerKey,
       containerStyle,
     } = props;
-    const { remove } = useModal();
+
+    const { remove, isExist } = useModal();
+
     const opacity = useSharedValue(0);
 
     useEffect(() => {
@@ -51,14 +55,14 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     }, []);
 
     const mount = useCallback(() => {
-      opacity.value = withTiming(mask ? 0.3 : 0, { duration }, () => {
+      opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration }, () => {
         onAppear && runOnJS(onAppear)();
       });
     }, [onAppear]);
 
     const animationStyle = useAnimatedStyle(() => {
       return {
-        backgroundColor: '#000',
+        backgroundColor: config.maskColor,
         opacity: opacity.value,
       };
     });
@@ -66,7 +70,9 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     const handleClickMask = useCallback(() => {
       if (pointerEvents === 'none') return;
       if (!modal && pointerEvents === 'auto') {
-        remove(innerKey);
+        if (isExist(innerKey || '')) {
+          remove(innerKey);
+        }
       }
       onClickMask && onClickMask();
     }, []);

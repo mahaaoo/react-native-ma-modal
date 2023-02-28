@@ -14,6 +14,7 @@ import Animated, {
   Extrapolate,
 } from 'react-native-reanimated';
 import { useModal } from './ModalProvider';
+import { useModalAnimated } from './ModalElements';
 
 import { AnimationContainerProps } from './type';
 
@@ -26,18 +27,20 @@ interface ScaleContainerProps extends AnimationContainerProps {}
 
 const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
   (props, ref) => {
+    const { config } = useModalAnimated()
+
     const {
       children,
       onClickMask,
       pointerEvents = 'auto',
       mask = true,
-      duration = 250,
+      duration = config.duration,
       onAppear,
       onDisappear,
       modal = false,
       innerKey,
     } = props;
-    const { remove } = useModal();
+    const { remove, isExist } = useModal();
     const opacity = useSharedValue(0);
     const scale = useSharedValue(0.5);
 
@@ -46,7 +49,7 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
     }, []);
 
     const mount = useCallback(() => {
-      opacity.value = withTiming(mask ? 0.3 : 0, { duration });
+      opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration });
       scale.value = withTiming(1, { duration }, () => {
         onAppear && runOnJS(onAppear)();
       });
@@ -61,7 +64,7 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
 
     const animationStyle = useAnimatedStyle(() => {
       return {
-        backgroundColor: '#000',
+        backgroundColor: config.maskColor,
         opacity: opacity.value,
       };
     });
@@ -80,7 +83,9 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
     const handleClickMask = useCallback(() => {
       if (pointerEvents === 'none') return;
       if (!modal && pointerEvents === 'auto') {
-        remove(innerKey);
+        if (isExist(innerKey || '')) {
+          remove(innerKey);
+        }    
       }
       onClickMask && onClickMask();
     }, []);

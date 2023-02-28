@@ -21,6 +21,28 @@ export default function OverlayExample() {
   const elementIndex = React.useRef(0);
   const [isVisible, setVisible] = useState(false);
 
+  console.log('刷新Home');
+
+  // return (
+  //   <Button
+  //   onPress={() => {
+  //     ModalUtil.add(
+  //       <TranslateContainer rootAnimation={'rotateX'} gesture={true}>
+  //         <View style={styles.bottom}>
+  //           <Text style={styles.childText}>
+  //             Funtion子视图{elementIndex.current}
+  //           </Text>
+  //         </View>
+  //       </TranslateContainer>
+  //     );
+  //     elementIndex.current++;
+  //   }}
+  // >
+  //   <Text>Bottom-RotateX</Text>
+  // </Button>
+  // )
+
+
   return (
     <ScrollView
       style={styles.container}
@@ -555,9 +577,8 @@ export default function OverlayExample() {
                     关闭
                   </Text>
                 </View>
-              </DrawerContainer>,
-              'draw-view-right'
-            );
+              </DrawerContainer>
+              );
             elementIndex.current++;
           }}
         >

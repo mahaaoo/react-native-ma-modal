@@ -11,7 +11,9 @@ import Index from './src/app';
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <ModalProvider ref={modalRef}>
+      <ModalProvider ref={modalRef} config={{
+        duration: 250,
+      }}>
         <NavigationContainer ref={navigationRef}>
           <Index />
         </NavigationContainer>

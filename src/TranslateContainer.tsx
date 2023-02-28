@@ -30,6 +30,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { clamp, snapPoint } from './ModalUtil';
 import { useModal } from './ModalProvider';
+import { useModalAnimated } from './ModalElements';
+
 import { AnimationContainerProps } from './type';
 
 const { width, height } = Dimensions.get('window');
@@ -58,13 +60,14 @@ const TranslateContainer = forwardRef<
   TranslateContainerRef,
   TranslateContainerProps
 >((props, ref) => {
+  const {progress, targetValue, config} = useModalAnimated();
   const {
     from = 'bottom',
     children,
     onAppear,
     onDisappear,
     mask = true,
-    duration = 250,
+    duration = config.duration,
     modal = false,
     onClickMask,
     pointerEvents = 'auto',
@@ -72,7 +75,7 @@ const TranslateContainer = forwardRef<
     containerStyle,
     gesture = false,
   } = props;
-  const { remove, progress, targetValue } = useModal();
+  const { remove, isExist, } = useModal();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -152,7 +155,7 @@ const TranslateContainer = forwardRef<
         }
       }
 
-      opacity.value = withTiming(mask ? 0.3 : 0, { duration });
+      opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration });
       if (from === 'bottom' || from === 'top') {
         translateY.value = withTiming(targetValue.value, { duration }, () => {
           onAppear && runOnJS(onAppear)();
@@ -199,7 +202,7 @@ const TranslateContainer = forwardRef<
   const maskAnimationStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
-      backgroundColor: '#000',
+      backgroundColor: config.maskColor,
     };
   });
 
@@ -235,8 +238,10 @@ const TranslateContainer = forwardRef<
 
   // invoke useModal remove by key
   const removeSelf = useCallback(() => {
-    remove(innerKey);
-  }, [remove, innerKey]);
+    if (isExist(innerKey || '')) {
+      remove(innerKey);
+    }
+  }, [remove, innerKey, isExist]);
 
   const handleClickMask = useCallback(() => {
     if (pointerEvents === 'none') return;

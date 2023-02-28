@@ -22,8 +22,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { useForceUpdate } from './ModalUtil';
 import { RootAnimationType, configAnimation } from './RootViewAnimations';
+import { ModalElements, ModalConfig, ElementType, ModalElementsRef } from './ModalElements';
 
 export interface ModalRef {
   /**
@@ -49,37 +49,27 @@ export interface ModalRef {
   isExist: (key: string) => boolean;
 }
 
-export interface ModalContextProps extends ModalRef {
-  initialValue: Animated.SharedValue<number>;
-  progress: Animated.SharedValue<number>;
-  targetValue: Animated.SharedValue<number>;
-}
-
-export const ModalContext = createContext({} as ModalContextProps);
+export const ModalContext = createContext({} as ModalRef);
 export const useModal = () => useContext(ModalContext);
 
-interface ModalProps {
+interface ModalProviderProps {
   children: React.ReactNode;
+  config?: ModalConfig
 }
 
-interface ElementType {
-  element: React.ReactNode;
-  key: string;
-  ref: any;
-}
+const ModalProvider = forwardRef<ModalRef, ModalProviderProps>((props, ref) => {
+  const { children, config } = props;
 
-const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
-  const { children } = props;
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
-  const { forceUpdate } = useForceUpdate();
+  // const { forceUpdate } = useForceUpdate();
   const elementsIndex = useRef<number>(0);
 
   const initialValue = useSharedValue(0);
   const progress = useSharedValue(0);
   const targetValue = useSharedValue(0);
+  const mainViewAnimation = useSharedValue<RootAnimationType>('null');
+  const modalElementsRef = useRef<ModalElementsRef | null>(null);
 
-  const [mainViewAnimation, setMainViewAnimation] =
-    useState<RootAnimationType>('null');
   const [rootPointerEvents, setRootPointerEvents] = useState<'auto' | 'none'>(
     'auto'
   );
@@ -91,7 +81,7 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
   const addNodeToModal = useCallback(
     (node: any, key?: string) => {
       if (node.props?.rootAnimation) {
-        setMainViewAnimation(node.props?.rootAnimation);
+        mainViewAnimation.value = node.props?.rootAnimation;
       }
 
       setRootPointerEvents(node.props?.rootPointerEvents || 'auto');
@@ -129,9 +119,9 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
           ref: nodeRef,
           onDisappear: () => {
             console.log(`删除组件${inner_key}`);
-            forceUpdate();
+            modalElementsRef.current && modalElementsRef.current.updateModal();
             onDisappear && onDisappear();
-            setMainViewAnimation('null');
+            mainViewAnimation.value = 'null';
             setRootPointerEvents('auto');
           },
           innerKey: inner_key,
@@ -141,7 +131,8 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
       });
 
       elementsIndex.current++;
-      forceUpdate();
+      modalElementsRef.current && modalElementsRef.current.updateModal();
+
       return inner_key;
     },
     [elements]
@@ -176,7 +167,7 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
       if (!!deleteAnimation && typeof deleteAnimation === 'function') {
         deleteAnimation();
       } else {
-        forceUpdate();
+        modalElementsRef.current && modalElementsRef.current.updateModal();
       }
     },
     [elements]
@@ -187,7 +178,7 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
    */
   const deleteAllNodeFromModal = useCallback(() => {
     elements.current = [];
-    forceUpdate();
+    modalElementsRef.current && modalElementsRef.current.updateModal();
   }, []);
 
   /**
@@ -203,7 +194,7 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
    * if set new value, animation will react
    */
   const mainViewStyle = useAnimatedStyle(() => {
-    return configAnimation(mainViewAnimation, progress, targetValue);
+    return configAnimation(mainViewAnimation.value, progress, targetValue);
   }, [mainViewAnimation]);
 
   useImperativeHandle(
@@ -224,10 +215,7 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
           add: addNodeToModal,
           remove: deleteNodeFromModal,
           removeAll: deleteAllNodeFromModal,
-          isExist,
-          initialValue,
-          progress,
-          targetValue,
+          isExist
         }}
       >
         <Animated.View
@@ -236,23 +224,15 @@ const Modal = forwardRef<ModalRef, ModalProps>((props, ref) => {
         >
           {children}
         </Animated.View>
-        {elements.current.map((node: any) => {
-          const pointerEvents = node.element.props.pointerEvents || 'auto';
-          let extraStyle = {};
-          // DrawerContainer's View will below the MainView
-          if (node.element.type.displayName === 'DrawerContainer') {
-            extraStyle = { zIndex: -10 };
-          }
-          return (
-            <View
-              key={node.key}
-              pointerEvents={pointerEvents}
-              style={[styles.Modal, extraStyle]}
-            >
-              {node.element}
-            </View>
-          );
-        })}
+        <ModalElements ref={modalElementsRef} 
+          {...{
+            elements,
+            config,
+            initialValue,
+            progress,
+            targetValue,  
+          }}
+        />
       </ModalContext.Provider>
     </View>
   );
@@ -266,15 +246,9 @@ const styles = StyleSheet.create({
   mainViewStyle: {
     flex: 1,
   },
-  Modal: {
+  modal: {
     ...StyleSheet.absoluteFillObject,
-  },
-  loadingContainer: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
-export default Modal;
+export default ModalProvider;
