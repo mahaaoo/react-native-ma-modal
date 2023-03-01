@@ -21,6 +21,10 @@ export default function OverlayExample() {
   const elementIndex = React.useRef(0);
   const [isVisible, setVisible] = useState(false);
 
+  React.useEffect(() => {
+    console.log('刷新Home');
+  });
+
   return (
     <ScrollView
       style={styles.container}

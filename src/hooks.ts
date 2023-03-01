@@ -19,4 +19,5 @@ export const useForceUpdate = () => {
 };
 
 export const useModal = () => useContext(ModalContext);
+
 export const useModalAnimated = () => useContext(ModalAnimatedContext);

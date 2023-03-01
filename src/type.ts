@@ -4,31 +4,70 @@ import Animated from 'react-native-reanimated';
 import { RootAnimationType } from './RootViewAnimations';
 
 export interface ModalProps {
+  /**
+   * Modal是否显示，true显示，false隐藏
+   */
   isVisible: boolean;
 }
 
+/**
+ * Modal全局控制配置项
+ */
 export type ModalConfig = {
+  /**
+   * Modal动画执行耗时，如果在具体的Container中未设置，则以此数值为准
+   */
   duration: number;
+  /**
+   * Modal展示的时候，背景蒙层颜色
+   */
   maskColor: string;
+  /**
+   * Modal展示的时候，背景蒙层透明度
+   */
   maskOpacity: number;
 };
 
-export type ElementType = {
-  element: React.ReactNode;
-  key: string;
-  ref: any;
-};
-
+/**
+ * Modal全局控制默认配置项
+ */
 export const DefaultModalConfig = {
   duration: 250,
   maskColor: '#000',
   maskOpacity: 0.3,
 };
 
+export type ElementType = {
+  /**
+   * 要展示的组件
+   */
+  element: React.ReactNode;
+  /**
+   * 该组件的key，如果未提供则会默认提供一个
+   */
+  key: string;
+  /**
+   * 该组件的引用
+   */
+  ref: any;
+};
+
 export interface ModalAnimatedContextProps {
+  /**
+   * 动画初始值
+   */
   initialValue: Animated.SharedValue<number>;
+  /**
+   * 当前动画进度
+   */
   progress: Animated.SharedValue<number>;
+  /**
+   * 目标动画值
+   */
   targetValue: Animated.SharedValue<number>;
+  /**
+   * Modal全局控制默认配置项
+   */
   config: ModalConfig;
 }
 
@@ -37,15 +76,17 @@ export const ModalAnimatedContext = createContext(
 );
 
 export interface ModalElementsRef {
+  /**
+   * 刷新ModalElements
+   */
   updateModal: () => void;
 }
 
 export interface ModalElementsProps {
+  /**
+   * 需要Modal的组件
+   */
   elements: MutableRefObject<Array<ElementType>>;
-  initialValue: Animated.SharedValue<number>;
-  progress: Animated.SharedValue<number>;
-  targetValue: Animated.SharedValue<number>;
-  config?: ModalConfig;
 }
 
 export interface ModalRef {
@@ -157,6 +198,9 @@ export interface DrawerContainerRef {
 }
 
 export interface DrawerContainerProps extends BaseContainerProps {
+  /**
+   * 抽屉的位置
+   */
   position?: 'left' | 'right';
   duration?: number;
 }

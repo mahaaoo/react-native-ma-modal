@@ -29,11 +29,23 @@ import {
   ModalRef,
   ModalProviderProps,
   ModalContext,
+  ModalAnimatedContext,
+  DefaultModalConfig,
 } from './type';
 
 export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
   (props, ref) => {
-    const { children, config } = props;
+    const { children } = props;
+
+    let config = props.config;
+
+    if (config) {
+      config.duration = config.duration || DefaultModalConfig.duration;
+      config.maskColor = config.maskColor || DefaultModalConfig.maskColor;
+      config.maskOpacity = config.maskOpacity || DefaultModalConfig.maskOpacity;
+    } else {
+      config = DefaultModalConfig;
+    }
 
     const elements = useRef<Array<ElementType>>([]); // all componets saved here
     const elementsIndex = useRef<number>(0);
@@ -198,16 +210,16 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
           >
             {children}
           </Animated.View>
-          <ModalElements
-            ref={modalElementsRef}
-            {...{
-              elements,
+          <ModalAnimatedContext.Provider
+            value={{
               config,
               initialValue,
               progress,
               targetValue,
             }}
-          />
+          >
+            <ModalElements ref={modalElementsRef} elements={elements} />
+          </ModalAnimatedContext.Provider>
         </ModalContext.Provider>
       </View>
     );
