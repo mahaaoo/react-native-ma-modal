@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useImperativeHandle,
 } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -15,8 +15,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useModal } from './ModalProvider';
 import { useModalAnimated } from './ModalElements';
-
 import { AnimationContainerProps } from './type';
+import { styles } from './styles';
 
 interface ScaleContainerRef {
   mount: (callback?: () => void) => void;
@@ -27,7 +27,7 @@ interface ScaleContainerProps extends AnimationContainerProps {}
 
 const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
   (props, ref) => {
-    const { config } = useModalAnimated()
+    const { config } = useModalAnimated();
 
     const {
       children,
@@ -85,7 +85,7 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
       if (!modal && pointerEvents === 'auto') {
         if (isExist(innerKey || '')) {
           remove(innerKey);
-        }    
+        }
       }
       onClickMask && onClickMask();
     }, []);
@@ -100,19 +100,19 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
     );
 
     return (
-      <View style={styles.modal}>
+      <View style={styles.absoluteFill}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.modal}
+          style={styles.absoluteFill}
           onPress={handleClickMask}
         >
           <Animated.View
             pointerEvents={pointerEvents}
-            style={[styles.modal, animationStyle]}
+            style={[styles.absoluteFill, animationStyle]}
           />
         </TouchableOpacity>
         <Animated.View
-          style={[styles.container, scaleStyle]}
+          style={[styles.scaleContainer, scaleStyle]}
           pointerEvents={'box-none'}
         >
           {children}
@@ -121,17 +121,6 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
     );
   }
 );
-
-const styles = StyleSheet.create({
-  modal: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 ScaleContainer.displayName = 'ScaleContainer';
 

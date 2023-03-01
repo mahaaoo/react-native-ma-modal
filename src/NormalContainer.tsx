@@ -4,8 +4,9 @@
  * onDisappear will be called when it unMount
  */
 import React, { forwardRef, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { BaseContainerProps } from './type';
+import { styles } from './styles';
 
 interface NormalContainerProps extends BaseContainerProps {}
 
@@ -23,21 +24,12 @@ const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>(
     }, [onAppear, onDisappear]);
 
     return (
-      <View style={styles.modal}>
+      <View style={styles.absoluteFill}>
         <View style={[styles.container, containerStyle]}>{children}</View>
       </View>
     );
   }
 );
-
-const styles = StyleSheet.create({
-  modal: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  container: {
-    flex: 1,
-  },
-});
 
 NormalContainer.displayName = 'NormalContainer';
 

@@ -31,8 +31,8 @@ import Animated, {
 import { clamp, snapPoint } from './ModalUtil';
 import { useModal } from './ModalProvider';
 import { useModalAnimated } from './ModalElements';
-
 import { AnimationContainerProps } from './type';
+import { styles } from './styles';
 
 const { width, height } = Dimensions.get('window');
 
@@ -60,7 +60,7 @@ const TranslateContainer = forwardRef<
   TranslateContainerRef,
   TranslateContainerProps
 >((props, ref) => {
-  const {progress, targetValue, config} = useModalAnimated();
+  const { progress, targetValue, config } = useModalAnimated();
   const {
     from = 'bottom',
     children,
@@ -75,7 +75,7 @@ const TranslateContainer = forwardRef<
     containerStyle,
     gesture = false,
   } = props;
-  const { remove, isExist, } = useModal();
+  const { remove, isExist } = useModal();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -306,19 +306,19 @@ const TranslateContainer = forwardRef<
   );
 
   return (
-    <View style={styles.mask}>
+    <View style={styles.absoluteFill}>
       <TouchableWithoutFeedback
-        style={styles.modal}
+        style={styles.translateContainer}
         onPress={handleClickMask}
       >
         <Animated.View
           pointerEvents={pointerEvents}
-          style={[styles.mask, maskAnimationStyle]}
+          style={[styles.absoluteFill, maskAnimationStyle]}
         />
       </TouchableWithoutFeedback>
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          style={[styles.modal, initialPosition, animationStyle]}
+          style={[styles.translateContainer, initialPosition, animationStyle]}
         >
           <View style={[styles.container, containerStyle]} onLayout={onLayout}>
             {children}
@@ -327,19 +327,6 @@ const TranslateContainer = forwardRef<
       </GestureDetector>
     </View>
   );
-});
-
-const styles = StyleSheet.create({
-  modal: {
-    position: 'absolute',
-    zIndex: 99,
-  },
-  mask: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  container: {
-    flex: 1,
-  },
 });
 
 TranslateContainer.displayName = 'TranslateContainer';

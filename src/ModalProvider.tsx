@@ -17,13 +17,19 @@ import React, {
   forwardRef,
   useState,
 } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import { RootAnimationType, configAnimation } from './RootViewAnimations';
-import { ModalElements, ModalConfig, ElementType, ModalElementsRef } from './ModalElements';
+import {
+  ModalElements,
+  ModalConfig,
+  ElementType,
+  ModalElementsRef,
+} from './ModalElements';
+import { styles } from './styles';
 
 export interface ModalRef {
   /**
@@ -54,7 +60,7 @@ export const useModal = () => useContext(ModalContext);
 
 interface ModalProviderProps {
   children: React.ReactNode;
-  config?: ModalConfig
+  config?: ModalConfig;
 }
 
 const ModalProvider = forwardRef<ModalRef, ModalProviderProps>((props, ref) => {
@@ -62,7 +68,6 @@ const ModalProvider = forwardRef<ModalRef, ModalProviderProps>((props, ref) => {
 
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
   const elementsIndex = useRef<number>(0);
-
   const initialValue = useSharedValue(0);
   const progress = useSharedValue(0);
   const targetValue = useSharedValue(0);
@@ -208,46 +213,34 @@ const ModalProvider = forwardRef<ModalRef, ModalProviderProps>((props, ref) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.mainViewContainer}>
       <ModalContext.Provider
         value={{
           add: addNodeToModal,
           remove: deleteNodeFromModal,
           removeAll: deleteAllNodeFromModal,
-          isExist
+          isExist,
         }}
       >
         <Animated.View
           pointerEvents={rootPointerEvents}
-          style={[styles.mainViewStyle, mainViewStyle]}
+          style={[styles.container, mainViewStyle]}
         >
           {children}
         </Animated.View>
-        <ModalElements ref={modalElementsRef} 
+        <ModalElements
+          ref={modalElementsRef}
           {...{
             elements,
             config,
             initialValue,
             progress,
-            targetValue,  
+            targetValue,
           }}
         />
       </ModalContext.Provider>
     </View>
   );
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  mainViewStyle: {
-    flex: 1,
-  },
-  modal: {
-    ...StyleSheet.absoluteFillObject,
-  },
 });
 
 export default ModalProvider;

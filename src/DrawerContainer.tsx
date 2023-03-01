@@ -9,10 +9,11 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
 import { useModalAnimated } from './ModalElements';
 import { BaseContainerProps } from './type';
+import { styles } from './styles';
 
 export interface DrawerContainerRef {
   unMount: (callback?: () => void) => void;
@@ -93,8 +94,8 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
     );
 
     return (
-      <View style={styles.mask}>
-        <Animated.View style={[styles.modal, initialPosition]}>
+      <View style={styles.absoluteFill}>
+        <Animated.View style={[styles.drawerContainer, initialPosition]}>
           <View style={[styles.container, containerStyle]} onLayout={onLayout}>
             {children}
           </View>
@@ -103,18 +104,6 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
     );
   }
 );
-
-const styles = StyleSheet.create({
-  modal: {
-    position: 'absolute',
-  },
-  mask: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  container: {
-    flex: 1,
-  },
-});
 
 DrawerContainer.displayName = 'DrawerContainer';
 

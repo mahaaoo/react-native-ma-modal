@@ -18,8 +18,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useModal } from './ModalProvider';
-import { useModalAnimated } from './ModalElements'
+import { useModalAnimated } from './ModalElements';
 import { AnimationContainerProps } from './type';
+import { styles } from './styles';
 
 interface OpacityContainerProps extends AnimationContainerProps {}
 
@@ -29,7 +30,7 @@ export interface OpacityContainerRef {
 
 const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
   (props, ref) => {
-    const {config} = useModalAnimated();
+    const { config } = useModalAnimated();
     const {
       children,
       onAppear,
@@ -55,9 +56,13 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     }, []);
 
     const mount = useCallback(() => {
-      opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration }, () => {
-        onAppear && runOnJS(onAppear)();
-      });
+      opacity.value = withTiming(
+        mask ? config.maskOpacity : 0,
+        { duration },
+        () => {
+          onAppear && runOnJS(onAppear)();
+        }
+      );
     }, [onAppear]);
 
     const animationStyle = useAnimatedStyle(() => {
@@ -86,15 +91,15 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     );
 
     return (
-      <View style={styles.modal}>
+      <View style={styles.absoluteFill}>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.modal}
+          style={styles.absoluteFill}
           onPress={handleClickMask}
         >
           <Animated.View
             pointerEvents={pointerEvents}
-            style={[styles.modal, animationStyle]}
+            style={[styles.absoluteFill, animationStyle]}
           />
         </TouchableOpacity>
         <View
@@ -107,15 +112,6 @@ const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     );
   }
 );
-
-const styles = StyleSheet.create({
-  modal: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  container: {
-    flex: 1,
-  },
-});
 
 OpacityContainer.displayName = 'OpacityContainer';
 
