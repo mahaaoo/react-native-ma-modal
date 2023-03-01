@@ -24,87 +24,86 @@ interface DrawerContainerProps extends BaseContainerProps {
   duration?: number;
 }
 
-const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
-  (props, ref) => {
-    const { targetValue, progress, config } = useModalAnimated();
-    const {
-      position,
-      duration = config.duration,
-      onAppear,
-      containerStyle,
-      children,
-      onDisappear,
-    } = props;
+export const DrawerContainer = forwardRef<
+  DrawerContainerRef,
+  DrawerContainerProps
+>((props, ref) => {
+  const { targetValue, progress, config } = useModalAnimated();
+  const {
+    position,
+    duration = config.duration,
+    onAppear,
+    containerStyle,
+    children,
+    onDisappear,
+  } = props;
 
-    const onLayout = useCallback(
-      ({
-        nativeEvent: {
-          layout: { width: w },
-        },
-      }) => {
-        mount(w);
+  const onLayout = useCallback(
+    ({
+      nativeEvent: {
+        layout: { width: w },
       },
-      []
-    );
+    }) => {
+      mount(w);
+    },
+    []
+  );
 
-    const mount = useCallback(
-      (w: number) => {
-        if (position === 'left') {
-          targetValue.value = w;
-        } else {
-          targetValue.value = -w;
-        }
-
-        progress.value = withTiming(1, { duration }, () => {
-          onAppear && runOnJS(onAppear)();
-        });
-      },
-      [onAppear]
-    );
-
-    const unMount = useCallback(() => {
-      progress.value = withTiming(0, { duration }, () => {
-        onDisappear && runOnJS(onDisappear)();
-      });
-    }, [onDisappear, position]);
-
-    const initialPosition = useMemo(() => {
-      switch (true) {
-        case position === 'left':
-          return {
-            top: 0,
-            bottom: 0,
-            left: 0,
-          };
-        case position === 'right':
-          return {
-            top: 0,
-            bottom: 0,
-            right: 0,
-          };
+  const mount = useCallback(
+    (w: number) => {
+      if (position === 'left') {
+        targetValue.value = w;
+      } else {
+        targetValue.value = -w;
       }
-    }, [position]);
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        unMount,
-      }),
-      []
-    );
+      progress.value = withTiming(1, { duration }, () => {
+        onAppear && runOnJS(onAppear)();
+      });
+    },
+    [onAppear]
+  );
 
-    return (
-      <View style={styles.absoluteFill}>
-        <Animated.View style={[styles.drawerContainer, initialPosition]}>
-          <View style={[styles.container, containerStyle]} onLayout={onLayout}>
-            {children}
-          </View>
-        </Animated.View>
-      </View>
-    );
-  }
-);
+  const unMount = useCallback(() => {
+    progress.value = withTiming(0, { duration }, () => {
+      onDisappear && runOnJS(onDisappear)();
+    });
+  }, [onDisappear, position]);
+
+  const initialPosition = useMemo(() => {
+    switch (true) {
+      case position === 'left':
+        return {
+          top: 0,
+          bottom: 0,
+          left: 0,
+        };
+      case position === 'right':
+        return {
+          top: 0,
+          bottom: 0,
+          right: 0,
+        };
+    }
+  }, [position]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      unMount,
+    }),
+    []
+  );
+
+  return (
+    <View style={styles.absoluteFill}>
+      <Animated.View style={[styles.drawerContainer, initialPosition]}>
+        <View style={[styles.container, containerStyle]} onLayout={onLayout}>
+          {children}
+        </View>
+      </Animated.View>
+    </View>
+  );
+});
 
 DrawerContainer.displayName = 'DrawerContainer';
-
-export default DrawerContainer;

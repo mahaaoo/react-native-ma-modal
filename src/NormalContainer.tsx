@@ -12,25 +12,24 @@ interface NormalContainerProps extends BaseContainerProps {}
 
 interface NormalContainerRef {}
 
-const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>(
-  (props, ref) => {
-    const { children, containerStyle, onAppear, onDisappear } = props;
+export const NormalContainer = forwardRef<
+  NormalContainerRef,
+  NormalContainerProps
+>((props, ref) => {
+  const { children, containerStyle, onAppear, onDisappear } = props;
 
-    useEffect(() => {
-      onAppear && onAppear();
-      return () => {
-        onDisappear && onDisappear();
-      };
-    }, [onAppear, onDisappear]);
+  useEffect(() => {
+    onAppear && onAppear();
+    return () => {
+      onDisappear && onDisappear();
+    };
+  }, [onAppear, onDisappear]);
 
-    return (
-      <View style={styles.absoluteFill}>
-        <View style={[styles.container, containerStyle]}>{children}</View>
-      </View>
-    );
-  }
-);
+  return (
+    <View style={styles.absoluteFill}>
+      <View style={[styles.container, containerStyle]}>{children}</View>
+    </View>
+  );
+});
 
 NormalContainer.displayName = 'NormalContainer';
-
-export default NormalContainer;

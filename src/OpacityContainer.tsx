@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useImperativeHandle,
 } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -28,91 +28,90 @@ export interface OpacityContainerRef {
   mount: () => void;
 }
 
-const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
-  (props, ref) => {
-    const { config } = useModalAnimated();
-    const {
-      children,
-      onAppear,
-      onDisappear,
-      mask = true,
-      duration = config.duration,
-      modal = false,
-      onClickMask,
-      pointerEvents = 'auto',
-      innerKey,
-      containerStyle,
-    } = props;
+export const OpacityContainer = forwardRef<
+  OpacityContainerRef,
+  OpacityContainerProps
+>((props, ref) => {
+  const { config } = useModalAnimated();
+  const {
+    children,
+    onAppear,
+    onDisappear,
+    mask = true,
+    duration = config.duration,
+    modal = false,
+    onClickMask,
+    pointerEvents = 'auto',
+    innerKey,
+    containerStyle,
+  } = props;
 
-    const { remove, isExist } = useModal();
+  const { remove, isExist } = useModal();
 
-    const opacity = useSharedValue(0);
+  const opacity = useSharedValue(0);
 
-    useEffect(() => {
-      mount();
-      return () => {
-        onDisappear && onDisappear();
-      };
-    }, []);
+  useEffect(() => {
+    mount();
+    return () => {
+      onDisappear && onDisappear();
+    };
+  }, []);
 
-    const mount = useCallback(() => {
-      opacity.value = withTiming(
-        mask ? config.maskOpacity : 0,
-        { duration },
-        () => {
-          onAppear && runOnJS(onAppear)();
-        }
-      );
-    }, [onAppear]);
-
-    const animationStyle = useAnimatedStyle(() => {
-      return {
-        backgroundColor: config.maskColor,
-        opacity: opacity.value,
-      };
-    });
-
-    const handleClickMask = useCallback(() => {
-      if (pointerEvents === 'none') return;
-      if (!modal && pointerEvents === 'auto') {
-        if (isExist(innerKey || '')) {
-          remove(innerKey);
-        }
+  const mount = useCallback(() => {
+    opacity.value = withTiming(
+      mask ? config.maskOpacity : 0,
+      { duration },
+      () => {
+        onAppear && runOnJS(onAppear)();
       }
-      onClickMask && onClickMask();
-    }, []);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        mount,
-      }),
-      []
     );
+  }, [onAppear]);
 
-    return (
-      <View style={styles.absoluteFill}>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.absoluteFill}
-          onPress={handleClickMask}
-        >
-          <Animated.View
-            pointerEvents={pointerEvents}
-            style={[styles.absoluteFill, animationStyle]}
-          />
-        </TouchableOpacity>
-        <View
-          style={[styles.container, containerStyle]}
-          pointerEvents={'box-none'}
-        >
-          {children}
-        </View>
+  const animationStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: config.maskColor,
+      opacity: opacity.value,
+    };
+  });
+
+  const handleClickMask = useCallback(() => {
+    if (pointerEvents === 'none') return;
+    if (!modal && pointerEvents === 'auto') {
+      if (isExist(innerKey || '')) {
+        remove(innerKey);
+      }
+    }
+    onClickMask && onClickMask();
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      mount,
+    }),
+    []
+  );
+
+  return (
+    <View style={styles.absoluteFill}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.absoluteFill}
+        onPress={handleClickMask}
+      >
+        <Animated.View
+          pointerEvents={pointerEvents}
+          style={[styles.absoluteFill, animationStyle]}
+        />
+      </TouchableOpacity>
+      <View
+        style={[styles.container, containerStyle]}
+        pointerEvents={'box-none'}
+      >
+        {children}
       </View>
-    );
-  }
-);
+    </View>
+  );
+});
 
 OpacityContainer.displayName = 'OpacityContainer';
-
-export default OpacityContainer;

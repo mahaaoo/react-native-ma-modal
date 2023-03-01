@@ -5,19 +5,17 @@ interface ModalProps {
   isVisible: boolean;
 }
 
-const Modal: React.FC<ModalProps> = (props) => {
-  const {children, isVisible} = props;
+export const Modal: React.FC<ModalProps> = (props) => {
+  const { children, isVisible } = props;
   const modalKey = useRef<string>();
 
   useEffect(() => {
     if (isVisible) {
       modalKey.current = ModalUtil.add(children);
     } else {
-      ModalUtil.remove(modalKey.current || '')
+      ModalUtil.remove(modalKey.current || '');
     }
   }, [isVisible]);
 
   return null;
 };
-
-export default Modal;

@@ -11,12 +11,7 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import {
-  StyleSheet,
-  Dimensions,
-  View,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { Dimensions, View, TouchableWithoutFeedback } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -56,7 +51,7 @@ export interface TranslateContainerRef {
   unMount: (callback?: () => void) => void;
 }
 
-const TranslateContainer = forwardRef<
+export const TranslateContainer = forwardRef<
   TranslateContainerRef,
   TranslateContainerProps
 >((props, ref) => {
@@ -330,5 +325,3 @@ const TranslateContainer = forwardRef<
 });
 
 TranslateContainer.displayName = 'TranslateContainer';
-
-export default TranslateContainer;
