@@ -11,18 +11,12 @@ import React, {
 } from 'react';
 import { View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
-import { useModalAnimated } from './ModalElements';
-import { BaseContainerProps } from './type';
+import {
+  DrawerContainerRef,
+  DrawerContainerProps,
+  useModalAnimated,
+} from './type';
 import { styles } from './styles';
-
-export interface DrawerContainerRef {
-  unMount: (callback?: () => void) => void;
-}
-
-interface DrawerContainerProps extends BaseContainerProps {
-  position?: 'left' | 'right';
-  duration?: number;
-}
 
 export const DrawerContainer = forwardRef<
   DrawerContainerRef,

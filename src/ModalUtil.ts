@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import { ModalRef } from './ModalProvider';
-
-/**
- * Must set at top <Modal ref={ModalRef}>
- * ModalUtil is just another way to invoke useModal
- * Can be used at out of FunctionComponent
- */
-export const modalRef = React.createRef<ModalRef>();
+import { modalRef } from './type';
 
 export const ModalUtil = {
   add: (children: React.ReactNode, key?: string) =>
@@ -24,7 +17,6 @@ export const ModalUtil = {
  * forceUpdate();
  */
 export const useForceUpdate = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, update] = useState(0);
 
   return {

@@ -13,17 +13,13 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { useModal } from './ModalProvider';
-import { useModalAnimated } from './ModalElements';
-import { AnimationContainerProps } from './type';
+import {
+  useModalAnimated,
+  useModal,
+  ScaleContainerRef,
+  ScaleContainerProps,
+} from './type';
 import { styles } from './styles';
-
-interface ScaleContainerRef {
-  mount: (callback?: () => void) => void;
-  unMount: (callback?: () => void) => void;
-}
-
-interface ScaleContainerProps extends AnimationContainerProps {}
 
 export const ScaleContainer = forwardRef<
   ScaleContainerRef,

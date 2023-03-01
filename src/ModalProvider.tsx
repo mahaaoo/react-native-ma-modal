@@ -23,45 +23,15 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { RootAnimationType, configAnimation } from './RootViewAnimations';
+import { ModalElements } from './ModalElements';
+import { styles } from './styles';
 import {
-  ModalElements,
-  ModalConfig,
   ElementType,
   ModalElementsRef,
-} from './ModalElements';
-import { styles } from './styles';
-
-export interface ModalRef {
-  /**
-   * Add a componet to window,
-   * If you set key, this components is unique,
-   * If not the key assigned by the system and return, this key can used to remove itself
-   */
-  add: (node: React.ReactNode, key?: string) => string;
-  /**
-   * Remove a componet from window,
-   * If you set key, this function will remove the key component
-   * If not this function will remove the newest one
-   * And if the component which will be removed has 'unMount' function, the unMount will be called before it be removed
-   */
-  remove: (key?: string) => void;
-  /**
-   * Remove all components without any animation
-   */
-  removeAll: () => void;
-  /**
-   * Check if the component already exists by key
-   */
-  isExist: (key: string) => boolean;
-}
-
-export const ModalContext = createContext({} as ModalRef);
-export const useModal = () => useContext(ModalContext);
-
-interface ModalProviderProps {
-  children: React.ReactNode;
-  config?: ModalConfig;
-}
+  ModalRef,
+  ModalProviderProps,
+  ModalContext,
+} from './type';
 
 export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
   (props, ref) => {

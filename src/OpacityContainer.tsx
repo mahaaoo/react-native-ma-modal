@@ -17,16 +17,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useModal } from './ModalProvider';
-import { useModalAnimated } from './ModalElements';
-import { AnimationContainerProps } from './type';
+import {
+  useModalAnimated,
+  useModal,
+  OpacityContainerRef,
+  OpacityContainerProps,
+} from './type';
 import { styles } from './styles';
-
-interface OpacityContainerProps extends AnimationContainerProps {}
-
-export interface OpacityContainerRef {
-  mount: () => void;
-}
 
 export const OpacityContainer = forwardRef<
   OpacityContainerRef,

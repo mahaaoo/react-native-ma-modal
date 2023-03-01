@@ -5,12 +5,8 @@
  */
 import React, { forwardRef, useEffect } from 'react';
 import { View } from 'react-native';
-import { BaseContainerProps } from './type';
+import { NormalContainerRef, NormalContainerProps } from './type';
 import { styles } from './styles';
-
-interface NormalContainerProps extends BaseContainerProps {}
-
-interface NormalContainerRef {}
 
 export const NormalContainer = forwardRef<
   NormalContainerRef,

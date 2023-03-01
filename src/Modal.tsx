@@ -1,9 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ModalUtil } from './ModalUtil';
-
-interface ModalProps {
-  isVisible: boolean;
-}
+import { ModalProps } from './type';
 
 export const Modal: React.FC<ModalProps> = (props) => {
   const { children, isVisible } = props;

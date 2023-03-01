@@ -24,32 +24,15 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { clamp, snapPoint } from './ModalUtil';
-import { useModal } from './ModalProvider';
-import { useModalAnimated } from './ModalElements';
-import { AnimationContainerProps } from './type';
+import {
+  useModalAnimated,
+  useModal,
+  TranslateContainerRef,
+  TranslateContainerProps,
+} from './type';
 import { styles } from './styles';
 
 const { width, height } = Dimensions.get('window');
-
-interface TranslateContainerProps extends AnimationContainerProps {
-  /**
-   * it means the component will appear from
-   * only support those four direction
-   */
-  from?: 'bottom' | 'top' | 'left' | 'right';
-  /**
-   * gesture to close
-   */
-  gesture?: boolean;
-}
-
-export interface TranslateContainerRef {
-  // mount: (callback?: () => void) => void;
-  /**
-   * will be invoked before be removed
-   */
-  unMount: (callback?: () => void) => void;
-}
 
 export const TranslateContainer = forwardRef<
   TranslateContainerRef,

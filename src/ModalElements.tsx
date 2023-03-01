@@ -1,57 +1,13 @@
-import React, {
-  createContext,
-  forwardRef,
-  MutableRefObject,
-  useContext,
-  useImperativeHandle,
-} from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { useForceUpdate } from './ModalUtil';
 import { styles } from './styles';
-
-export interface ModalConfig {
-  duration: number;
-
-  maskColor: string;
-  maskOpacity: number;
-}
-
-export interface ElementType {
-  element: React.ReactNode;
-  key: string;
-  ref: any;
-}
-
-const DefaultModalConfig = {
-  duration: 250,
-  maskColor: '#000',
-  maskOpacity: 0.3,
-};
-
-export interface ModalAnimatedContextProps {
-  initialValue: Animated.SharedValue<number>;
-  progress: Animated.SharedValue<number>;
-  targetValue: Animated.SharedValue<number>;
-  config: ModalConfig;
-}
-
-export const ModalAnimatedContext = createContext(
-  {} as ModalAnimatedContextProps
-);
-export const useModalAnimated = () => useContext(ModalAnimatedContext);
-
-export interface ModalElementsRef {
-  updateModal: () => void;
-}
-
-interface ModalElementsProps {
-  elements: MutableRefObject<Array<ElementType>>;
-  initialValue: Animated.SharedValue<number>;
-  progress: Animated.SharedValue<number>;
-  targetValue: Animated.SharedValue<number>;
-  config?: ModalConfig;
-}
+import {
+  ModalElementsRef,
+  ModalElementsProps,
+  DefaultModalConfig,
+  ModalAnimatedContext,
+} from './type';
 
 export const ModalElements = forwardRef<ModalElementsRef, ModalElementsProps>(
   (props, ref) => {
