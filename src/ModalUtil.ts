@@ -9,23 +9,6 @@ export const ModalUtil = {
   isExist: (key: string) => modalRef.current?.isExist(key),
 };
 
-/**
- * refresh immediately
- * @returns () => void
- * usage:
- * const { forceUpdate } = useForceUpdate();
- * forceUpdate();
- */
-export const useForceUpdate = () => {
-  const [_, update] = useState(0);
-
-  return {
-    forceUpdate: () => {
-      update((up) => up + 1);
-    },
-  };
-};
-
 // from [react-native-redash](https://github.com/wcandillon/react-native-redash)
 export const snapPoint = (
   value: number,

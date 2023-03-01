@@ -3,7 +3,7 @@
  * onAppear will be called when it mount,
  * onDisappear will be called when it unMount
  */
-import React, { forwardRef, useEffect } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { View } from 'react-native';
 import { NormalContainerRef, NormalContainerProps } from './type';
 import { styles } from './styles';
@@ -20,6 +20,8 @@ export const NormalContainer = forwardRef<
       onDisappear && onDisappear();
     };
   }, [onAppear, onDisappear]);
+
+  useImperativeHandle(ref, () => ({}), []);
 
   return (
     <View style={styles.absoluteFill}>

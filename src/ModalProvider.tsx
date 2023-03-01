@@ -9,9 +9,7 @@
  * Modal also accepts customize component, if offer unMount function, it will be invoked before remove
  */
 import React, {
-  createContext,
   useCallback,
-  useContext,
   useRef,
   useImperativeHandle,
   forwardRef,

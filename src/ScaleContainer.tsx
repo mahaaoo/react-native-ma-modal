@@ -13,12 +13,8 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import {
-  useModalAnimated,
-  useModal,
-  ScaleContainerRef,
-  ScaleContainerProps,
-} from './type';
+import { ScaleContainerRef, ScaleContainerProps } from './type';
+import { useModalAnimated, useModal } from './hooks';
 import { styles } from './styles';
 
 export const ScaleContainer = forwardRef<

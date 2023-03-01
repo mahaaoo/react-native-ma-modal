@@ -17,13 +17,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {
-  useModalAnimated,
-  useModal,
-  OpacityContainerRef,
-  OpacityContainerProps,
-} from './type';
+import { OpacityContainerRef, OpacityContainerProps } from './type';
 import { styles } from './styles';
+import { useModalAnimated, useModal } from './hooks';
 
 export const OpacityContainer = forwardRef<
   OpacityContainerRef,

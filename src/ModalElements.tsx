@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { View } from 'react-native';
-import { useForceUpdate } from './ModalUtil';
+import { useForceUpdate } from './hooks';
 import { styles } from './styles';
 import {
   ModalElementsRef,

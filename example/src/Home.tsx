@@ -21,28 +21,6 @@ export default function OverlayExample() {
   const elementIndex = React.useRef(0);
   const [isVisible, setVisible] = useState(false);
 
-  console.log('刷新Home');
-
-  // return (
-  //   <Button
-  //   onPress={() => {
-  //     ModalUtil.add(
-  //       <TranslateContainer rootAnimation={'rotateX'} gesture={true}>
-  //         <View style={styles.bottom}>
-  //           <Text style={styles.childText}>
-  //             Funtion子视图{elementIndex.current}
-  //           </Text>
-  //         </View>
-  //       </TranslateContainer>
-  //     );
-  //     elementIndex.current++;
-  //   }}
-  // >
-  //   <Text>Bottom-RotateX</Text>
-  // </Button>
-  // )
-
-
   return (
     <ScrollView
       style={styles.container}
@@ -411,7 +389,16 @@ export default function OverlayExample() {
             onPress={() => {
               ModalUtil.add(
                 <TranslateContainer rootAnimation={'scale'} gesture={true}>
-                  <View style={[styles.bottom, { height: height - 88, borderTopRightRadius: 10, borderTopLeftRadius: 10 }]}>
+                  <View
+                    style={[
+                      styles.bottom,
+                      {
+                        height: height - 88,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                      },
+                    ]}
+                  >
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -578,7 +565,7 @@ export default function OverlayExample() {
                   </Text>
                 </View>
               </DrawerContainer>
-              );
+            );
             elementIndex.current++;
           }}
         >
@@ -661,7 +648,7 @@ export default function OverlayExample() {
               <Text>子视图{elementIndex.current}</Text>
               <Text
                 onPress={() => {
-                  setVisible(false)
+                  setVisible(false);
                 }}
                 style={styles.close}
               >
@@ -672,14 +659,13 @@ export default function OverlayExample() {
         </Modal>
         <Button
           onPress={() => {
-            setVisible(true)
+            setVisible(true);
             elementIndex.current++;
           }}
         >
           <Text>Modal-Component</Text>
         </Button>
       </Section>
-
     </ScrollView>
   );
 }

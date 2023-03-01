@@ -24,12 +24,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { clamp, snapPoint } from './ModalUtil';
-import {
-  useModalAnimated,
-  useModal,
-  TranslateContainerRef,
-  TranslateContainerProps,
-} from './type';
+import { TranslateContainerRef, TranslateContainerProps } from './type';
+import { useModalAnimated, useModal } from './hooks';
 import { styles } from './styles';
 
 const { width, height } = Dimensions.get('window');

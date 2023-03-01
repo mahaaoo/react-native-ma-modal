@@ -1,4 +1,4 @@
-import { createContext, createRef, MutableRefObject, useContext } from 'react';
+import { createContext, createRef, MutableRefObject } from 'react';
 import { ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { RootAnimationType } from './RootViewAnimations';
@@ -35,7 +35,6 @@ export interface ModalAnimatedContextProps {
 export const ModalAnimatedContext = createContext(
   {} as ModalAnimatedContextProps
 );
-export const useModalAnimated = () => useContext(ModalAnimatedContext);
 
 export interface ModalElementsRef {
   updateModal: () => void;
@@ -74,7 +73,6 @@ export interface ModalRef {
 }
 
 export const ModalContext = createContext({} as ModalRef);
-export const useModal = () => useContext(ModalContext);
 
 export interface ModalProviderProps {
   children: React.ReactNode;
