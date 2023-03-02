@@ -1,8 +1,9 @@
 import { Dimensions, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import Animated, {
-  AnimatedStyleProp,
   Extrapolate,
   interpolate,
+  AnimateStyle,
+  AnimatableValue,
 } from 'react-native-reanimated';
 const { height } = Dimensions.get('window');
 
@@ -13,7 +14,7 @@ const addDeg = (deg: number): string => {
 
 export const scaleAnimation = (
   progress: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
     transform: [
@@ -32,7 +33,7 @@ export const scaleAnimation = (
 export const translateXAnimation = (
   progress: Animated.SharedValue<number>,
   targetValue: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
     transform: [
@@ -50,7 +51,7 @@ export const translateXAnimation = (
 
 export const rotateXAnimation = (
   progress: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
     transform: [
@@ -80,30 +81,18 @@ export const rotateXAnimation = (
   };
 };
 
-export const scaleAndTranslateX = (
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+export const borderRadiusAnimation = (
+  progress: Animated.SharedValue<number>
+): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
-    transform: [
-      {
-        scale: interpolate(
-          progress.value,
-          [0, 1],
-          [1, 0.94],
-          Extrapolate.CLAMP
-        ),
-      },
-      {
-        translateX: interpolate(
-          progress.value,
-          [0, 1],
-          [0, targetValue.value],
-          Extrapolate.CLAMP
-        ),
-      },
-    ],
+    overflow: 'hidden',
+    borderRadius: interpolate(
+      progress.value,
+      [0, 1],
+      [0, 20],
+      Extrapolate.CLAMP
+    ),
   };
 };
 
@@ -112,13 +101,13 @@ export type RootAnimationType =
   | 'translateX'
   | 'scale'
   | 'rotateX'
-  | 'scaleAndtranslateX';
+  | 'borderRadius';
 
 const TypeToAnimation: {
   [key in RootAnimationType]: (
     progress: Animated.SharedValue<number>,
     targetValue: Animated.SharedValue<number>
-  ) => AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>;
+  ) => AnimateStyle<ViewStyle | ImageStyle | TextStyle>;
 } = {
   'null': () => {
     'worklet';
@@ -139,21 +128,44 @@ const TypeToAnimation: {
     'worklet';
     return rotateXAnimation(progress);
   },
-  'scaleAndtranslateX': (
-    progress: Animated.SharedValue<number>,
-    targetValue: Animated.SharedValue<number>
-  ) => {
+  'borderRadius': (progress: Animated.SharedValue<number>) => {
     'worklet';
-    return scaleAndTranslateX(progress, targetValue);
+    return borderRadiusAnimation(progress);
   },
 };
 
 export const configAnimation = (
-  type: RootAnimationType,
+  mainViewAnimation: Animated.SharedValue<
+    RootAnimationType | Array<RootAnimationType>
+  >,
   progress: Animated.SharedValue<number>,
   targetValue: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
-  const animation = TypeToAnimation[type];
-  return animation(progress, targetValue);
+  let style: AnimateStyle<ViewStyle | ImageStyle | TextStyle> = {
+    transform: [],
+  };
+  const type = mainViewAnimation.value;
+  if (Array.isArray(type)) {
+    if (type.length > 1) {
+      type.forEach((t) => {
+        const animation = TypeToAnimation[t];
+        const _style = animation(progress, targetValue) || {};
+        if (_style.transform) {
+          style.transform = style.transform
+            ? style.transform.concat(_style.transform)
+            : _style.transform;
+        }
+        style = Object.assign(_style, style);
+      });
+    } else {
+      const animation = TypeToAnimation[type[0]];
+      style = animation(progress, targetValue);
+    }
+  } else {
+    const animation = TypeToAnimation[type];
+    style = animation(progress, targetValue);
+  }
+
+  return style;
 };

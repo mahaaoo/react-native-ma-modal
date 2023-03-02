@@ -419,11 +419,19 @@ export default function OverlayExample() {
             onPress={() => {
               ModalUtil.add(
                 <TranslateContainer
-                  from="left"
+                  rootAnimation={['scale', 'borderRadius']}
                   gesture={true}
-                  rootAnimation={'scale'}
                 >
-                  <View style={styles.left2}>
+                  <View
+                    style={[
+                      styles.bottom,
+                      {
+                        height: height - 88,
+                        borderTopRightRadius: 10,
+                        borderTopLeftRadius: 10,
+                      },
+                    ]}
+                  >
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -433,7 +441,7 @@ export default function OverlayExample() {
               elementIndex.current++;
             }}
           >
-            <Text>Left-Scale</Text>
+            <Text>Bottom-Scale-Border</Text>
           </Button>
         </View>
         <View style={styles.viewContainer}>
@@ -452,6 +460,27 @@ export default function OverlayExample() {
             }}
           >
             <Text>Bottom-RotateX</Text>
+          </Button>
+          <Button
+            style={styles.marginLeft}
+            onPress={() => {
+              ModalUtil.add(
+                <TranslateContainer
+                  from="left"
+                  gesture={true}
+                  rootAnimation={'scale'}
+                >
+                  <View style={styles.left2}>
+                    <Text style={styles.childText}>
+                      Funtion子视图{elementIndex.current}
+                    </Text>
+                  </View>
+                </TranslateContainer>
+              );
+              elementIndex.current++;
+            }}
+          >
+            <Text>Left-Scale</Text>
           </Button>
         </View>
         <View style={styles.viewContainer}>
@@ -504,7 +533,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  rootAnimation={'scaleAndtranslateX'}
+                  rootAnimation={['scale', 'translateX']}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -526,7 +555,7 @@ export default function OverlayExample() {
           onPress={() => {
             const index = ModalUtil.add(
               <DrawerContainer
-                rootAnimation={'scaleAndtranslateX'}
+                rootAnimation={['scale', 'translateX']}
                 position="left"
               >
                 <View style={styles.left2}>
@@ -581,7 +610,7 @@ export default function OverlayExample() {
             const index = ModalUtil.add(
               <DrawerContainer
                 rootPointerEvents="none"
-                rootAnimation={'scaleAndtranslateX'}
+                rootAnimation={['scale', 'translateX']}
                 position="left"
               >
                 <View style={styles.left2}>

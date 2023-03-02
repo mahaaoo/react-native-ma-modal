@@ -104,11 +104,11 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
             ref: nodeRef,
             onDisappear: () => {
               console.log(`删除组件${inner_key}`);
-              modalElementsRef.current &&
-                modalElementsRef.current.updateModal();
               onDisappear && onDisappear();
               mainViewAnimation.value = 'null';
               setRootPointerEvents('auto');
+              modalElementsRef.current &&
+                modalElementsRef.current.updateModal();
             },
             innerKey: inner_key,
           }),
@@ -180,7 +180,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
      * if set new value, animation will react
      */
     const mainViewStyle = useAnimatedStyle(() => {
-      return configAnimation(mainViewAnimation.value, progress, targetValue);
+      return configAnimation(mainViewAnimation, progress, targetValue);
     }, [mainViewAnimation]);
 
     useImperativeHandle(
@@ -194,6 +194,8 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
       []
     );
 
+    console.log('vvv');
+
     return (
       <View style={styles.mainViewContainer}>
         <ModalContext.Provider
@@ -206,7 +208,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
         >
           <Animated.View
             pointerEvents={rootPointerEvents}
-            style={[styles.container, mainViewStyle]}
+            style={[styles.mainView, mainViewStyle]}
           >
             {children}
           </Animated.View>

@@ -166,7 +166,7 @@ export interface BaseContainerProps {
   /**
    * config root view animation
    */
-  rootAnimation?: RootAnimationType;
+  rootAnimation?: RootAnimationType | Array<RootAnimationType>;
 }
 
 /**

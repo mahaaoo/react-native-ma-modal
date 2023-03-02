@@ -5,6 +5,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  mainView: {
+    flex: 1,
+    overflow: 'hidden',
+  },
   container: {
     flex: 1,
   },
