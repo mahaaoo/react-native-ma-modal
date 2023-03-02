@@ -1,6 +1,6 @@
 import { createContext, createRef, MutableRefObject } from 'react';
-import { ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import Animated, { AnimateStyle } from 'react-native-reanimated';
 import { RootAnimationType } from './RootViewAnimations';
 
 export interface ModalProps {
@@ -127,6 +127,10 @@ export interface ModalProviderProps {
  */
 export const modalRef = createRef<ModalRef>();
 
+export type ModalMainAnimatedFunc = (
+  progress: Animated.SharedValue<number>,
+  targetValue: Animated.SharedValue<number>
+) => AnimateStyle<ViewStyle | ImageStyle | TextStyle>;
 /**
  * All Modal Container Must exntent this interface
  */
@@ -167,6 +171,10 @@ export interface BaseContainerProps {
    * config root view animation
    */
   rootAnimation?: RootAnimationType | Array<RootAnimationType>;
+  /**
+   * main view use this animation
+   */
+  doAnimation?: ModalMainAnimatedFunc;
 }
 
 /**

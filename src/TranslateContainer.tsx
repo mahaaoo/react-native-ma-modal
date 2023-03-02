@@ -23,7 +23,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { clamp, snapPoint } from './ModalUtil';
+import { clamp, snapPoint } from './utils';
 import { TranslateContainerRef, TranslateContainerProps } from './type';
 import { useModalAnimated, useModal } from './hooks';
 import { styles } from './styles';

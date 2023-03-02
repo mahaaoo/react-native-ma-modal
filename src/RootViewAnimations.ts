@@ -3,8 +3,8 @@ import Animated, {
   Extrapolate,
   interpolate,
   AnimateStyle,
-  AnimatableValue,
 } from 'react-native-reanimated';
+import { mergeStyle } from './utils';
 const { height } = Dimensions.get('window');
 
 const addDeg = (deg: number): string => {
@@ -151,12 +151,7 @@ export const configAnimation = (
       type.forEach((t) => {
         const animation = TypeToAnimation[t];
         const _style = animation(progress, targetValue) || {};
-        if (_style.transform) {
-          style.transform = style.transform
-            ? style.transform.concat(_style.transform)
-            : _style.transform;
-        }
-        style = Object.assign(_style, style);
+        style = mergeStyle(style, _style);
       });
     } else {
       const animation = TypeToAnimation[type[0]];

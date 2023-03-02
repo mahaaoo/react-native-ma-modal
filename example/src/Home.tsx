@@ -11,6 +11,7 @@ import {
   ScaleContainer,
   Modal,
 } from 'react-native-ma-modal';
+import { Extrapolate, interpolate } from 'react-native-reanimated';
 import Button from './Button';
 import Section from './Section';
 
@@ -697,6 +698,48 @@ export default function OverlayExample() {
           }}
         >
           <Text>Modal-Component</Text>
+        </Button>
+      </Section>
+      <Section title="User-Define-MainView-Animation">
+        <Button
+          onPress={() => {
+            ModalUtil.add(
+              <TranslateContainer
+                rootAnimation={'scale'}
+                gesture={true}
+                doAnimation={(progress) => {
+                  'worklet';
+                  return {
+                    overflow: 'hidden',
+                    borderRadius: interpolate(
+                      progress.value,
+                      [0, 1],
+                      [0, 50],
+                      Extrapolate.CLAMP
+                    ),
+                  };
+                }}
+              >
+                <View
+                  style={[
+                    styles.bottom,
+                    {
+                      height: height - 88,
+                      borderTopRightRadius: 10,
+                      borderTopLeftRadius: 10,
+                    },
+                  ]}
+                >
+                  <Text style={styles.childText}>
+                    Funtion子视图{elementIndex.current}
+                  </Text>
+                </View>
+              </TranslateContainer>
+            );
+            elementIndex.current++;
+          }}
+        >
+          <Text>Bottom-Scale</Text>
         </Button>
       </Section>
     </ScrollView>

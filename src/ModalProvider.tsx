@@ -31,7 +31,9 @@ import {
   ModalContext,
   ModalAnimatedContext,
   DefaultModalConfig,
+  ModalMainAnimatedFunc,
 } from './type';
+import { mergeStyle } from './utils';
 
 export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
   (props, ref) => {
@@ -53,8 +55,10 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
     const progress = useSharedValue(0);
     const targetValue = useSharedValue(0);
     const mainViewAnimation = useSharedValue<RootAnimationType>('null');
+    const mainViewDoAnimation = useSharedValue<Array<ModalMainAnimatedFunc>>(
+      []
+    );
     const modalElementsRef = useRef<ModalElementsRef | null>(null);
-
     const [rootPointerEvents, setRootPointerEvents] = useState<'auto' | 'none'>(
       'auto'
     );
@@ -67,6 +71,9 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
       (node: any, key?: string) => {
         if (node.props?.rootAnimation) {
           mainViewAnimation.value = node.props?.rootAnimation;
+        }
+        if (node.props?.doAnimation) {
+          mainViewDoAnimation.value = [node.props?.doAnimation];
         }
 
         setRootPointerEvents(node.props?.rootPointerEvents || 'auto');
@@ -109,6 +116,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
               setRootPointerEvents('auto');
               modalElementsRef.current &&
                 modalElementsRef.current.updateModal();
+              mainViewDoAnimation.value = [];
             },
             innerKey: inner_key,
           }),
@@ -180,7 +188,12 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
      * if set new value, animation will react
      */
     const mainViewStyle = useAnimatedStyle(() => {
-      return configAnimation(mainViewAnimation, progress, targetValue);
+      let style = configAnimation(mainViewAnimation, progress, targetValue);
+      if (mainViewDoAnimation.value.length === 1) {
+        const _style = mainViewDoAnimation.value[0](progress, targetValue);
+        style = mergeStyle(style, _style);
+      }
+      return style;
     }, [mainViewAnimation]);
 
     useImperativeHandle(
@@ -193,8 +206,6 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
       }),
       []
     );
-
-    console.log('vvv');
 
     return (
       <View style={styles.mainViewContainer}>

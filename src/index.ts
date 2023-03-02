@@ -3,7 +3,7 @@ export * from './hooks';
 export { Modal } from './Modal';
 
 export { ModalProvider } from './ModalProvider';
-export { ModalUtil } from './ModalUtil';
+export { ModalUtil } from './utils';
 
 export { NormalContainer } from './NormalContainer';
 export { OpacityContainer } from './OpacityContainer';
