@@ -11,7 +11,12 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import { Dimensions, View, TouchableWithoutFeedback } from 'react-native';
+import {
+  Dimensions,
+  View,
+  TouchableWithoutFeedback,
+  StatusBar,
+} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -128,12 +133,22 @@ export const TranslateContainer = forwardRef<
           break;
         }
       }
-
       opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration });
       if (from === 'bottom' || from === 'top') {
-        translateY.value = withTiming(targetValue.value, { duration }, () => {
-          onAppear && runOnJS(onAppear)();
-        });
+        // 修正安卓平台StatusBar高度
+        let diff = 0;
+        if (from === 'bottom') {
+          diff += StatusBar.currentHeight || 0;
+        } else {
+          diff -= StatusBar.currentHeight || 0;
+        }
+        translateY.value = withTiming(
+          targetValue.value + diff,
+          { duration },
+          () => {
+            onAppear && runOnJS(onAppear)();
+          }
+        );
       } else {
         translateX.value = withTiming(targetValue.value, { duration }, () => {
           onAppear && runOnJS(onAppear)();

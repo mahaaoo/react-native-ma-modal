@@ -245,7 +245,7 @@ export default function OverlayExample() {
             onPress={() => {
               ModalUtil.add(
                 <TranslateContainer>
-                  <View style={[styles.bottom, { height: height - 150 }]}>
+                  <View style={[styles.bottom, { height: 330 }]}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -779,7 +779,7 @@ const styles = StyleSheet.create({
   },
   left: {
     width: 200,
-    height,
+    flex: 1,
     backgroundColor: '#fff',
   },
   viewContainer: {
@@ -788,12 +788,12 @@ const styles = StyleSheet.create({
   },
   left2: {
     width: 300,
-    height,
+    flex: 1,
     backgroundColor: '#fff',
   },
   right: {
     width: 220,
-    height,
+    flex: 1,
     backgroundColor: '#fff',
   },
   section: {
