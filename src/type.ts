@@ -31,7 +31,7 @@ export type ModalConfig = {
 /**
  * Modal全局控制默认配置项
  */
-export const DefaultModalConfig = {
+export const DefaultModalConfig: ModalConfig = {
   duration: 250,
   maskColor: '#000',
   maskOpacity: 0.3,

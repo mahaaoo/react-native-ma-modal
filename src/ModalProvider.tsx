@@ -30,24 +30,14 @@ import {
   ModalProviderProps,
   ModalContext,
   ModalAnimatedContext,
-  DefaultModalConfig,
   ModalMainAnimatedFunc,
 } from './type';
-import { mergeStyle } from './utils';
+import { handleConfig, mergeStyle } from './utils';
 
 export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
   (props, ref) => {
     const { children } = props;
-
-    let config = props.config;
-
-    if (config) {
-      config.duration = config.duration || DefaultModalConfig.duration;
-      config.maskColor = config.maskColor || DefaultModalConfig.maskColor;
-      config.maskOpacity = config.maskOpacity || DefaultModalConfig.maskOpacity;
-    } else {
-      config = DefaultModalConfig;
-    }
+    const config = handleConfig(props.config);
 
     const elements = useRef<Array<ElementType>>([]); // all componets saved here
     const elementsIndex = useRef<number>(0);

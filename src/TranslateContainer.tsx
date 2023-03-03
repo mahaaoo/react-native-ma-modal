@@ -11,12 +11,7 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import {
-  Dimensions,
-  View,
-  TouchableWithoutFeedback,
-  StatusBar,
-} from 'react-native';
+import { Dimensions, View, TouchableWithoutFeedback } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -28,7 +23,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { clamp, snapPoint } from './utils';
+import { clamp, regulateStatusBarHeight, snapPoint } from './utils';
 import { TranslateContainerRef, TranslateContainerProps } from './type';
 import { useModalAnimated, useModal } from './hooks';
 import { styles } from './styles';
@@ -83,13 +78,13 @@ export const TranslateContainer = forwardRef<
     }) => {
       switch (true) {
         case from === 'bottom': {
-          snapPoints1.value = -h;
+          snapPoints1.value = -h + regulateStatusBarHeight(from);
           snapPoints2.value = 0;
           break;
         }
         case from === 'top': {
           snapPoints1.value = 0;
-          snapPoints2.value = h;
+          snapPoints2.value = h + regulateStatusBarHeight(from);
           break;
         }
         case from === 'left': {
@@ -135,15 +130,8 @@ export const TranslateContainer = forwardRef<
       }
       opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration });
       if (from === 'bottom' || from === 'top') {
-        // 修正安卓平台StatusBar高度
-        let diff = 0;
-        if (from === 'bottom') {
-          diff += StatusBar.currentHeight || 0;
-        } else {
-          diff -= StatusBar.currentHeight || 0;
-        }
         translateY.value = withTiming(
-          targetValue.value + diff,
+          targetValue.value + regulateStatusBarHeight(from),
           { duration },
           () => {
             onAppear && runOnJS(onAppear)();

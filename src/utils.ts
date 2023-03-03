@@ -1,7 +1,7 @@
 import React from 'react';
-import { ViewStyle, ImageStyle, TextStyle } from 'react-native';
+import { ViewStyle, ImageStyle, TextStyle, StatusBar } from 'react-native';
 import { AnimateStyle } from 'react-native-reanimated';
-import { modalRef } from './type';
+import { DefaultModalConfig, ModalConfig, modalRef } from './type';
 
 export const ModalUtil = {
   add: (children: React.ReactNode, key?: string) =>
@@ -47,4 +47,38 @@ export const mergeStyle = (
       : style2.transform;
   }
   return Object.assign(style2, style1);
+};
+
+/**
+ * 在安卓平台上，需要处理StatusBar高度
+ * @param from 底部或者顶部
+ * @returns number
+ */
+export const regulateStatusBarHeight = (from: string): number => {
+  'worklet';
+  let diff = 0;
+  if (from === 'bottom') {
+    diff += StatusBar.currentHeight || 0;
+  }
+  if (from === 'top') {
+    diff -= StatusBar.currentHeight || 0;
+  }
+
+  return diff;
+};
+
+/**
+ * 处理默认的全局参数
+ * @param config ModalConfig | undefined
+ * @returns ModalConfig
+ */
+export const handleConfig = (config: ModalConfig | undefined): ModalConfig => {
+  if (config) {
+    config.duration = config.duration || DefaultModalConfig.duration;
+    config.maskColor = config.maskColor || DefaultModalConfig.maskColor;
+    config.maskOpacity = config.maskOpacity || DefaultModalConfig.maskOpacity;
+  } else {
+    config = DefaultModalConfig;
+  }
+  return config;
 };
