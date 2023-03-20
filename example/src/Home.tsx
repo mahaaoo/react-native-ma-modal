@@ -10,6 +10,8 @@ import {
   DrawerContainer,
   ScaleContainer,
   Modal,
+  Loading,
+  Toast,
 } from 'react-native-ma-modal';
 import { Extrapolate, interpolate } from 'react-native-reanimated';
 import Button from './Button';
@@ -740,6 +742,23 @@ export default function OverlayExample() {
           }}
         >
           <Text>Bottom-Scale</Text>
+        </Button>
+      </Section>
+      <Section title="Loading&Toast">
+        <Button
+          onPress={() => {
+            Loading.show();
+          }}
+        >
+          <Text>Loading</Text>
+        </Button>
+        <Button
+          style={styles.marginLeft}
+          onPress={() => {
+            Toast.show('alert');
+          }}
+        >
+          <Text>Toast</Text>
         </Button>
       </Section>
     </ScrollView>

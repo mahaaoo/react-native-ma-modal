@@ -191,8 +191,8 @@ export interface AnimationContainerProps extends BaseContainerProps {
    */
   duration?: number;
   /**
-   * If modal equal true, the Modal must be remove by call remove function
-   * If modal equal false, the Modal can be close by click mask
+   * if true, the Modal must be remove by call remove function
+   * if false, the Modal can be close by click mask
    */
   modal?: boolean;
   /**
@@ -244,4 +244,12 @@ export interface TranslateContainerRef {
    * will be invoked before be removed
    */
   unMount: (callback?: () => void) => void;
+}
+
+export interface UniqueModal {
+  key: string;
+  template: (...props: any) => React.ReactNode;
+  show: (...props: any) => void;
+  hide: () => void;
+  isExist: () => boolean;
 }

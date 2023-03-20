@@ -8,7 +8,7 @@ export const ModalUtil = {
     modalRef.current?.add(children, key),
   remove: (key: string) => modalRef.current?.remove(key),
   removeAll: () => modalRef.current?.removeAll(),
-  isExist: (key: string) => modalRef.current?.isExist(key),
+  isExist: (key: string) => modalRef.current?.isExist(key) || false,
 };
 
 // from [react-native-redash](https://github.com/wcandillon/react-native-redash)

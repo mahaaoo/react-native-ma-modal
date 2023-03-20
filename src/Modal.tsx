@@ -5,7 +5,7 @@
  * </Modal>
  */
 import React, { useEffect, useRef } from 'react';
-import { ModalUtil } from './utils/utils';
+import { ModalUtil } from './utils/util';
 import { ModalProps } from './utils/type';
 
 export const Modal: React.FC<ModalProps> = (props) => {

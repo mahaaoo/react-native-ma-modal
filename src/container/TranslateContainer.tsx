@@ -23,7 +23,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { clamp, regulateStatusBarHeight, snapPoint } from '../utils/utils';
+import { clamp, regulateStatusBarHeight, snapPoint } from '../utils/util';
 import { TranslateContainerRef, TranslateContainerProps } from '../utils/type';
 import { useModalAnimated, useModal } from '../utils/hooks';
 import { styles } from '../utils/styles';

@@ -4,7 +4,7 @@ import Animated, {
   interpolate,
   AnimateStyle,
 } from 'react-native-reanimated';
-import { mergeStyle } from './utils';
+import { mergeStyle } from './util';
 const { height } = Dimensions.get('window');
 
 const addDeg = (deg: number): string => {

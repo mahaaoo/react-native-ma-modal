@@ -32,7 +32,7 @@ import {
   ModalAnimatedContext,
   ModalMainAnimatedFunc,
 } from './utils/type';
-import { handleConfig, mergeStyle } from './utils/utils';
+import { handleConfig, mergeStyle } from './utils/util';
 
 export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
   (props, ref) => {
