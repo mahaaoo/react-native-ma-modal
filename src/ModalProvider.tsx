@@ -20,9 +20,9 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { RootAnimationType, configAnimation } from './RootViewAnimations';
+import { RootAnimationType, configAnimation } from './utils/RootViewAnimations';
 import { ModalElements } from './ModalElements';
-import { styles } from './styles';
+import { styles } from './utils/styles';
 import {
   ElementType,
   ModalElementsRef,
@@ -31,8 +31,8 @@ import {
   ModalContext,
   ModalAnimatedContext,
   ModalMainAnimatedFunc,
-} from './type';
-import { handleConfig, mergeStyle } from './utils';
+} from './utils/type';
+import { handleConfig, mergeStyle } from './utils/utils';
 
 export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
   (props, ref) => {

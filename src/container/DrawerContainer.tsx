@@ -11,9 +11,9 @@ import React, {
 } from 'react';
 import { View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
-import { DrawerContainerRef, DrawerContainerProps } from './type';
-import { useModalAnimated } from './hooks';
-import { styles } from './styles';
+import { DrawerContainerRef, DrawerContainerProps } from '../utils/type';
+import { useModalAnimated } from '../utils/hooks';
+import { styles } from '../utils/styles';
 
 export const DrawerContainer = forwardRef<
   DrawerContainerRef,

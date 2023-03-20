@@ -23,10 +23,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { clamp, regulateStatusBarHeight, snapPoint } from './utils';
-import { TranslateContainerRef, TranslateContainerProps } from './type';
-import { useModalAnimated, useModal } from './hooks';
-import { styles } from './styles';
+import { clamp, regulateStatusBarHeight, snapPoint } from '../utils/utils';
+import { TranslateContainerRef, TranslateContainerProps } from '../utils/type';
+import { useModalAnimated, useModal } from '../utils/hooks';
+import { styles } from '../utils/styles';
 
 const { width, height } = Dimensions.get('window');
 

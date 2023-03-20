@@ -1,8 +1,11 @@
+/**
+ * Modal实际添加在此组件内，多次添加Modal会重叠加载
+ */
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { View } from 'react-native';
-import { useForceUpdate } from './hooks';
-import { styles } from './styles';
-import { ModalElementsRef, ModalElementsProps } from './type';
+import { useForceUpdate } from './utils/hooks';
+import { styles } from './utils/styles';
+import { ModalElementsRef, ModalElementsProps } from './utils/type';
 
 export const ModalElements = forwardRef<ModalElementsRef, ModalElementsProps>(
   (props, ref) => {

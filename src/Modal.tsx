@@ -1,6 +1,12 @@
+/**
+ * 使用JSX调用Modal组件，由isVisible控制是否显示
+ * <Modal isVisible={ture}>
+ *  <View></View>
+ * </Modal>
+ */
 import React, { useEffect, useRef } from 'react';
-import { ModalUtil } from './utils';
-import { ModalProps } from './type';
+import { ModalUtil } from './utils/utils';
+import { ModalProps } from './utils/type';
 
 export const Modal: React.FC<ModalProps> = (props) => {
   const { children, isVisible } = props;

@@ -18,6 +18,11 @@ export const useForceUpdate = () => {
   };
 };
 
+/**
+ * 操作modal显示/隐藏
+ */
 export const useModal = () => useContext(ModalContext);
-
+/**
+ * 与modal显示/隐藏动画相关参数
+ */
 export const useModalAnimated = () => useContext(ModalAnimatedContext);
