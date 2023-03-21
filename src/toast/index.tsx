@@ -12,7 +12,6 @@ export interface ToastOptions {
 }
 
 export const Toast: UniqueModal = {
-  key: 'global-toast',
   template: (title: string) => {
     // before add
     return (
@@ -30,17 +29,15 @@ export const Toast: UniqueModal = {
   },
   show: (title: string, options?: ToastOptions) => {
     const duration = options?.duration || 2000;
+    const key = ModalUtil.add(Toast.template(title, options));
     if (!Toast.isExist()) {
       const time = setTimeout(() => {
-        Toast.hide();
+        ModalUtil.remove(key || '');
         clearTimeout(time);
       }, duration);
     }
-
-    ModalUtil.add(Toast.template(title, options), Toast.key);
   },
-  hide: () => ModalUtil.remove(Toast.key),
-  isExist: () => ModalUtil.isExist(Toast.key),
+  isExist: () => ModalUtil.isExist(Toast.key || ''),
 };
 
 const styles = StyleSheet.create({

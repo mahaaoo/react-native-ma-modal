@@ -247,9 +247,30 @@ export interface TranslateContainerRef {
 }
 
 export interface UniqueModal {
-  key: string;
+  /**
+   * 全局标记key，不会重复弹出
+   */
+  key?: string;
+  /**
+   * 弹出Modal模版样式
+   * @param props
+   * @returns
+   */
   template: (...props: any) => React.ReactNode;
+  /**
+   * 显示
+   * @param props
+   * @returns
+   */
   show: (...props: any) => void;
-  hide: () => void;
+  /**
+   * 隐藏
+   * @returns
+   */
+  hide?: () => void;
+  /**
+   * 当前Modal是否已经弹出
+   * @returns
+   */
   isExist: () => boolean;
 }

@@ -17,10 +17,12 @@ export const Loading: UniqueModal = {
     );
   },
   show: () => {
-    ModalUtil.add(Loading.template(), Loading.key);
+    if (!Loading.isExist()) {
+      ModalUtil.add(Loading.template(), Loading.key);
+    }
   },
-  hide: () => ModalUtil.remove(Loading.key),
-  isExist: () => ModalUtil.isExist(Loading.key),
+  hide: () => ModalUtil.remove(Loading.key || ''),
+  isExist: () => ModalUtil.isExist(Loading.key || ''),
 };
 
 const styles = StyleSheet.create({
