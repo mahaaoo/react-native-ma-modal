@@ -59,15 +59,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
      */
     const addNodeToModal = useCallback(
       (node: any, key?: string) => {
-        if (node.props?.rootAnimation) {
-          mainViewAnimation.value = node.props?.rootAnimation;
-        }
-        if (node.props?.doAnimation) {
-          mainViewDoAnimation.value = [node.props?.doAnimation];
-        }
-
-        setRootPointerEvents(node.props?.rootPointerEvents || 'auto');
-        // If add the same key will be return
+        // 相同key不会被重复添加到视图中
         if (typeof key === 'string') {
           let addElement;
           for (let index = 0; index < elements.current.length; index++) {
@@ -77,9 +69,19 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
             }
           }
           if (addElement) {
+            console.log(`ma-modal warning：${key} has been added to Modal`);
             return key;
           }
         }
+
+        if (node.props?.rootAnimation) {
+          mainViewAnimation.value = node.props?.rootAnimation;
+        }
+        if (node.props?.doAnimation) {
+          mainViewDoAnimation.value = [node.props?.doAnimation];
+        }
+
+        setRootPointerEvents(node.props?.rootPointerEvents || 'auto');
 
         /**
          * Before add compoonet to window, there are some props must handle
@@ -114,6 +116,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
           ref: nodeRef,
         });
 
+        console.log('添加组件', key);
         elementsIndex.current++;
         modalElementsRef.current && modalElementsRef.current.updateModal();
 
@@ -138,6 +141,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
             }
           }
         } else {
+          // 如果没有指定要删除的key，默认删除最新添加的modal
           deleteElement = elements.current[elements.current.length - 1];
           elements.current.splice(elements.current.length - 1, 1);
         }

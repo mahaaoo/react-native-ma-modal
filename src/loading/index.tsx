@@ -17,9 +17,7 @@ export const Loading: UniqueModal = {
     );
   },
   show: () => {
-    if (!Loading.isExist()) {
-      ModalUtil.add(Loading.template(), Loading.key);
-    }
+    ModalUtil.add(Loading.template(), Loading.key);
   },
   hide: () => ModalUtil.remove(Loading.key || ''),
   isExist: () => ModalUtil.isExist(Loading.key || ''),
