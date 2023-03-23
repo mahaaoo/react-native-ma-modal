@@ -10,7 +10,7 @@ import { ModalProps } from './utils/type';
 
 export const Modal: React.FC<ModalProps> = (props) => {
   const { children, isVisible } = props;
-  const modalKey = useRef<string>();
+  const modalKey = useRef<string>('');
 
   useEffect(() => {
     if (isVisible) {

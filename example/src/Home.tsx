@@ -26,7 +26,13 @@ export default function OverlayExample() {
 
   React.useEffect(() => {
     console.log('刷新Home');
-  });
+    const listener = ModalUtil.addListener('onReady', (res: any) => {
+      console.log('onReadyonReady', res);
+    });
+    return () => {
+      ModalUtil.removeListener(listener);
+    };
+  }, []);
 
   return (
     <ScrollView
@@ -557,10 +563,7 @@ export default function OverlayExample() {
         <Button
           onPress={() => {
             const index = ModalUtil.add(
-              <DrawerContainer
-                rootAnimation={['scale', 'translateX']}
-                position="left"
-              >
+              <DrawerContainer rootAnimation={['translateX']} position="left">
                 <View style={styles.left2}>
                   <Text style={styles.childText}>
                     Funtion子视图{elementIndex.current}
@@ -707,7 +710,6 @@ export default function OverlayExample() {
           onPress={() => {
             ModalUtil.add(
               <TranslateContainer
-                rootAnimation={'scale'}
                 gesture={true}
                 doAnimation={(progress) => {
                   'worklet';
@@ -719,6 +721,16 @@ export default function OverlayExample() {
                       [0, 50],
                       Extrapolate.CLAMP
                     ),
+                    transform: [
+                      {
+                        scale: interpolate(
+                          progress.value,
+                          [0, 1],
+                          [1, 0.7],
+                          Extrapolate.CLAMP
+                        ),
+                      },
+                    ],
                   };
                 }}
               >
@@ -726,7 +738,7 @@ export default function OverlayExample() {
                   style={[
                     styles.bottom,
                     {
-                      height: height - 88,
+                      height: 500,
                       borderTopRightRadius: 10,
                       borderTopLeftRadius: 10,
                     },

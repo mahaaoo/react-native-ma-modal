@@ -3,12 +3,36 @@ import { ViewStyle, ImageStyle, TextStyle, StatusBar } from 'react-native';
 import { AnimateStyle } from 'react-native-reanimated';
 import { DefaultModalConfig, ModalConfig, modalRef } from './type';
 
+interface ModalListener {
+  eventName: string;
+  key: number;
+}
+
 export const ModalUtil = {
+  listener: new Map(),
+  index: 0,
   add: (children: React.ReactNode, key?: string) =>
-    modalRef.current?.add(children, key),
+    modalRef.current?.add(children, key) || '',
   remove: (key: string) => modalRef.current?.remove(key),
   removeAll: () => modalRef.current?.removeAll(),
   isExist: (key: string) => modalRef.current?.isExist(key) || false,
+  addListener: (eventName: string, callback: Function): ModalListener => {
+    if (!ModalUtil.listener.has(eventName)) {
+      ModalUtil.listener.set(eventName, new Map());
+    }
+    ModalUtil.listener.get(eventName).set(++ModalUtil.index, callback);
+    return { eventName, key: ModalUtil.index };
+  },
+  emit(eventName: string, params?: { [key: string]: any }) {
+    if (ModalUtil.listener.has(eventName)) {
+      const eveMap = ModalUtil.listener.get(eventName);
+      eveMap.forEach((map: Function) => map(params));
+    }
+  },
+  removeListener(event: ModalListener) {
+    const { eventName, key } = event;
+    ModalUtil.listener.get(eventName).delete(key);
+  },
 };
 
 // from [react-native-redash](https://github.com/wcandillon/react-native-redash)
@@ -34,19 +58,19 @@ export const clamp = (
 };
 
 /**
- * 合并两个动画样式，把style2合并到style1中
+ * 合并两个动画样式，把style合并到mainStyle中
  */
 export const mergeStyle = (
-  style1: AnimateStyle<ViewStyle | ImageStyle | TextStyle>,
-  style2: AnimateStyle<ViewStyle | ImageStyle | TextStyle>
+  mainStyle: AnimateStyle<ViewStyle | ImageStyle | TextStyle>,
+  style: AnimateStyle<ViewStyle | ImageStyle | TextStyle>
 ) => {
   'worklet';
-  if (style2.transform) {
-    style1.transform = style1.transform
-      ? style1.transform.concat(style2.transform)
-      : style2.transform;
+  if (style.transform) {
+    mainStyle.transform = mainStyle.transform
+      ? mainStyle.transform.concat(style.transform)
+      : style.transform;
   }
-  return Object.assign(style2, style1);
+  return Object.assign(style, mainStyle);
 };
 
 /**
