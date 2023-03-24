@@ -121,7 +121,7 @@ export const ModalProvider = forwardRef<ModalRef, ModalProviderProps>(
           ref: nodeRef,
         });
 
-        console.log('添加组件', key);
+        console.log('添加组件', inner_key);
         elementsIndex.current++;
         modalElementsRef.current && modalElementsRef.current.updateModal();
 

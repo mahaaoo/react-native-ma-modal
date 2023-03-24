@@ -213,40 +213,7 @@ export default function OverlayExample() {
         >
           <Text>mask-no-close</Text>
         </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = add(
-              <OpacityContainer
-                modal={true}
-                mask={false}
-                onAppear={() => {
-                  console.log('子视图已弹出');
-                }}
-                onDisappear={() => {
-                  console.log('子视图已消失');
-                }}
-              >
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-                <Text
-                  onPress={() => {
-                    remove(index);
-                  }}
-                  style={styles.close}
-                >
-                  关闭
-                </Text>
-              </OpacityContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>no-mask</Text>
-        </Button>
       </Section>
-
       <Section title="TranslateContainer" style={styles.section}>
         <View style={styles.row}>
           <Button
@@ -269,7 +236,11 @@ export default function OverlayExample() {
             style={styles.marginLeft}
             onPress={() => {
               ModalUtil.add(
-                <TranslateContainer from="top">
+                <TranslateContainer
+                  containerStyle={{ alignItems: 'center', marginLeft: 100 }}
+                  from="top"
+                  offset={(height - 200) / 2}
+                >
                   <View style={styles.top}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
@@ -304,8 +275,12 @@ export default function OverlayExample() {
             style={styles.marginLeft}
             onPress={() => {
               ModalUtil.add(
-                <TranslateContainer from="right">
-                  <View style={styles.left}>
+                <TranslateContainer
+                  containerStyle={{ justifyContent: 'center', marginTop: 200 }}
+                  from="right"
+                  offset={-(width - 200) / 2}
+                >
+                  <View style={styles.tRight}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -610,36 +585,6 @@ export default function OverlayExample() {
         >
           <Text>Right</Text>
         </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = ModalUtil.add(
-              <DrawerContainer
-                rootPointerEvents="none"
-                rootAnimation={['scale', 'translateX']}
-                position="left"
-              >
-                <View style={styles.left2}>
-                  <Text style={styles.childText}>
-                    Funtion子视图{elementIndex.current}
-                  </Text>
-                  <Text
-                    onPress={() => {
-                      remove(index);
-                    }}
-                    style={styles.close}
-                  >
-                    关闭
-                  </Text>
-                </View>
-              </DrawerContainer>,
-              'draw-view-left'
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Left-Root-None</Text>
-        </Button>
       </Section>
       <Section title="ScaleContainer">
         <Button
@@ -805,12 +750,20 @@ const styles = StyleSheet.create({
   },
   top: {
     height: 200,
-    width,
+    width: 200,
+    borderRadius: 10,
     backgroundColor: '#fff',
   },
   left: {
+    height,
     width: 200,
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  tRight: {
+    width: 200,
+    height: 200,
+    // flex: 1,
     backgroundColor: '#fff',
   },
   viewContainer: {
