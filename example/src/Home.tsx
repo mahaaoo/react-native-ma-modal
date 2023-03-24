@@ -771,6 +771,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   left2: {
+    height,
     width: 300,
     flex: 1,
     backgroundColor: '#fff',
