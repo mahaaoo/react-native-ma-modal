@@ -28,7 +28,11 @@ export default function OverlayExample() {
     console.log('刷新Home');
     const listener = ModalUtil.addListener('onReady', (res: any) => {
       console.log('onReadyonReady', res);
+      setTimeout(() => {
+        Loading.hide?.();
+      }, 2000);
     });
+    Loading.show();
     return () => {
       ModalUtil.removeListener(listener);
     };
