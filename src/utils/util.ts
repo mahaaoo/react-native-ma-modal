@@ -13,7 +13,7 @@ export const ModalUtil = {
     modalRef.current?.add(children, key) || '',
   remove: (key: string) => modalRef.current?.remove(key),
   removeAll: () => modalRef.current?.removeAll(),
-  isExist: (key: string) => modalRef.current?.isExist(key) || false,
+  isExist: (key: string) => modalRef.current?.isExist(key),
   listener: new Map(),
   index: 0,
   addListener: (eventName: string, callback: Function): ModalListener => {

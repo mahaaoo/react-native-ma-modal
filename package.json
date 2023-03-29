@@ -63,7 +63,7 @@
   "author": "mahaaoo <mahao9393@163.com> (https://github.com/mahaaoo)",
   "license": "MIT",
   "jest": {
-    "preset": "react-native",
+    "preset": "jest-expo",
     "setupFiles": [
       "./node_modules/react-native-gesture-handler/jestSetup.js"
     ]
