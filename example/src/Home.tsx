@@ -32,7 +32,6 @@ export default function OverlayExample() {
         Loading.hide?.();
       }, 2000);
     });
-    Loading.show();
     return () => {
       ModalUtil.removeListener(listener);
     };
@@ -722,8 +721,59 @@ export default function OverlayExample() {
           <Text>Toast</Text>
         </Button>
       </Section>
+      <Section title="Add Function Component">
+        <Button
+          onPress={() => {
+            /**
+             * 由于Function Component不能直接添加ref，所以在add的时候，必须用提供的组件包裹，否则会报如下错误
+             *  ERROR  Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+             */
+            add(
+              <TranslateContainer>
+                <FunctionComponent />
+              </TranslateContainer>
+            );
+          }}
+        >
+          <Text>Function Component</Text>
+        </Button>
+        <Button
+          style={styles.marginLeft}
+          onPress={() => {
+            /**
+             * 由于Function Component不能直接添加ref，所以在add的时候，必须用提供的组件包裹，否则会报如下错误
+             *  ERROR  Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+             */
+            add(
+              <TranslateContainer>
+                <ClComponet />
+              </TranslateContainer>
+            );
+          }}
+        >
+          <Text>Class Component</Text>
+        </Button>
+      </Section>
     </ScrollView>
   );
+}
+
+const FunctionComponent = () => {
+  return (
+    <View style={[styles.bottom, { height: 330 }]}>
+      <Text style={styles.childText}>Funtion子视图</Text>
+    </View>
+  );
+};
+
+class ClComponet extends React.Component {
+  render() {
+    return (
+      <View style={[styles.bottom, { height: 330 }]}>
+        <Text style={styles.childText}>Funtion子视图</Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
