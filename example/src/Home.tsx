@@ -28,6 +28,9 @@ export default function OverlayExample() {
     console.log('刷新Home');
     const listener = ModalUtil.addListener('onReady', (res: any) => {
       console.log('onReadyonReady', res);
+      setTimeout(() => {
+        Loading.hide?.();
+      }, 2000);
     });
     return () => {
       ModalUtil.removeListener(listener);
@@ -213,40 +216,7 @@ export default function OverlayExample() {
         >
           <Text>mask-no-close</Text>
         </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = add(
-              <OpacityContainer
-                modal={true}
-                mask={false}
-                onAppear={() => {
-                  console.log('子视图已弹出');
-                }}
-                onDisappear={() => {
-                  console.log('子视图已消失');
-                }}
-              >
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-                <Text
-                  onPress={() => {
-                    remove(index);
-                  }}
-                  style={styles.close}
-                >
-                  关闭
-                </Text>
-              </OpacityContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>no-mask</Text>
-        </Button>
       </Section>
-
       <Section title="TranslateContainer" style={styles.section}>
         <View style={styles.row}>
           <Button
@@ -269,7 +239,11 @@ export default function OverlayExample() {
             style={styles.marginLeft}
             onPress={() => {
               ModalUtil.add(
-                <TranslateContainer from="top">
+                <TranslateContainer
+                  containerStyle={{ alignItems: 'center', marginLeft: 100 }}
+                  from="top"
+                  offset={(height - 200) / 2}
+                >
                   <View style={styles.top}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
@@ -304,8 +278,12 @@ export default function OverlayExample() {
             style={styles.marginLeft}
             onPress={() => {
               ModalUtil.add(
-                <TranslateContainer from="right">
-                  <View style={styles.left}>
+                <TranslateContainer
+                  containerStyle={{ justifyContent: 'center', marginTop: 200 }}
+                  from="right"
+                  offset={-(width - 200) / 2}
+                >
+                  <View style={styles.tRight}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
                     </Text>
@@ -610,36 +588,6 @@ export default function OverlayExample() {
         >
           <Text>Right</Text>
         </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = ModalUtil.add(
-              <DrawerContainer
-                rootPointerEvents="none"
-                rootAnimation={['scale', 'translateX']}
-                position="left"
-              >
-                <View style={styles.left2}>
-                  <Text style={styles.childText}>
-                    Funtion子视图{elementIndex.current}
-                  </Text>
-                  <Text
-                    onPress={() => {
-                      remove(index);
-                    }}
-                    style={styles.close}
-                  >
-                    关闭
-                  </Text>
-                </View>
-              </DrawerContainer>,
-              'draw-view-left'
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Left-Root-None</Text>
-        </Button>
       </Section>
       <Section title="ScaleContainer">
         <Button
@@ -773,8 +721,59 @@ export default function OverlayExample() {
           <Text>Toast</Text>
         </Button>
       </Section>
+      <Section title="Add Function Component">
+        <Button
+          onPress={() => {
+            /**
+             * 由于Function Component不能直接添加ref，所以在add的时候，必须用提供的组件包裹，否则会报如下错误
+             *  ERROR  Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+             */
+            add(
+              <TranslateContainer>
+                <FunctionComponent />
+              </TranslateContainer>
+            );
+          }}
+        >
+          <Text>Function Component</Text>
+        </Button>
+        <Button
+          style={styles.marginLeft}
+          onPress={() => {
+            /**
+             * 由于Function Component不能直接添加ref，所以在add的时候，必须用提供的组件包裹，否则会报如下错误
+             *  ERROR  Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+             */
+            add(
+              <TranslateContainer>
+                <ClComponet />
+              </TranslateContainer>
+            );
+          }}
+        >
+          <Text>Class Component</Text>
+        </Button>
+      </Section>
     </ScrollView>
   );
+}
+
+const FunctionComponent = () => {
+  return (
+    <View style={[styles.bottom, { height: 330 }]}>
+      <Text style={styles.childText}>Funtion子视图</Text>
+    </View>
+  );
+};
+
+class ClComponet extends React.Component {
+  render() {
+    return (
+      <View style={[styles.bottom, { height: 330 }]}>
+        <Text style={styles.childText}>Funtion子视图</Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -805,12 +804,20 @@ const styles = StyleSheet.create({
   },
   top: {
     height: 200,
-    width,
+    width: 200,
+    borderRadius: 10,
     backgroundColor: '#fff',
   },
   left: {
+    height,
     width: 200,
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  tRight: {
+    width: 200,
+    height: 200,
+    // flex: 1,
     backgroundColor: '#fff',
   },
   viewContainer: {
@@ -818,6 +825,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   left2: {
+    height,
     width: 300,
     flex: 1,
     backgroundColor: '#fff',

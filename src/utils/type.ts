@@ -237,6 +237,10 @@ export interface TranslateContainerProps extends AnimationContainerProps {
    * gesture to close
    */
   gesture?: boolean;
+  /**
+   * 在显示的基础上在该方向上的偏移量
+   */
+  offset?: number;
 }
 export interface TranslateContainerRef {
   // mount: (callback?: () => void) => void;

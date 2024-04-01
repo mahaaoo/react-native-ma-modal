@@ -9,13 +9,13 @@ interface ModalListener {
 }
 
 export const ModalUtil = {
-  listener: new Map(),
-  index: 0,
   add: (children: React.ReactNode, key?: string) =>
     modalRef.current?.add(children, key) || '',
   remove: (key: string) => modalRef.current?.remove(key),
   removeAll: () => modalRef.current?.removeAll(),
-  isExist: (key: string) => modalRef.current?.isExist(key) || false,
+  isExist: (key: string) => modalRef.current?.isExist(key),
+  listener: new Map(),
+  index: 0,
   addListener: (eventName: string, callback: Function): ModalListener => {
     if (!ModalUtil.listener.has(eventName)) {
       ModalUtil.listener.set(eventName, new Map());
@@ -32,6 +32,9 @@ export const ModalUtil = {
   removeListener(event: ModalListener) {
     const { eventName, key } = event;
     ModalUtil.listener.get(eventName).delete(key);
+  },
+  removeAllListener() {
+    ModalUtil.listener.clear();
   },
 };
 

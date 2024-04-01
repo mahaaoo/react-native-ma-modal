@@ -1,6 +1,8 @@
 # react-native-ma-modal
 完全使用ts实现的RN弹窗组件，支持自定义动画
 
+<img src="./screenshot/overlay.gif" width="250" />
+
 ## 安装
 在使用之前请先安装`react-native-reanimated`和`react-native-gesture-handle`
 ```
@@ -81,9 +83,6 @@ export default function Example() {
 - 缩放效果：`ScaleContainer`
 
 更多示例请参照[Demo](https://github.com/mahaaoo/react-native-ma-modal/blob/main/example/src/Home.tsx)
-
-## 预览
-<img src="./screenshot/overlay.gif" width="250" />
 
 ## Expo Demo
 Scan the QR code with Expo Go (Android) or the Camera app

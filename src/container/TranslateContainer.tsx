@@ -37,6 +37,7 @@ export const TranslateContainer = forwardRef<
   const { progress, targetValue, config } = useModalAnimated();
   const {
     from = 'bottom',
+    offset: translateOffset = 0,
     children,
     onAppear,
     onDisappear,
@@ -131,16 +132,20 @@ export const TranslateContainer = forwardRef<
       opacity.value = withTiming(mask ? config.maskOpacity : 0, { duration });
       if (from === 'bottom' || from === 'top') {
         translateY.value = withTiming(
-          targetValue.value + regulateStatusBarHeight(from),
+          targetValue.value + regulateStatusBarHeight(from) + translateOffset,
           { duration },
           () => {
             onAppear && runOnJS(onAppear)();
           }
         );
       } else {
-        translateX.value = withTiming(targetValue.value, { duration }, () => {
-          onAppear && runOnJS(onAppear)();
-        });
+        translateX.value = withTiming(
+          targetValue.value + translateOffset,
+          { duration },
+          () => {
+            onAppear && runOnJS(onAppear)();
+          }
+        );
       }
     },
     [onAppear]
@@ -189,25 +194,17 @@ export const TranslateContainer = forwardRef<
       case from === 'bottom':
         return {
           top: height,
-          left: 0,
-          right: 0,
         };
       case from === 'top':
         return {
           bottom: height,
-          left: 0,
-          right: 0,
         };
       case from === 'left':
         return {
-          top: 0,
-          bottom: 0,
           right: width,
         };
       case from === 'right':
         return {
-          top: 0,
-          bottom: 0,
           left: width,
         };
     }
@@ -295,11 +292,15 @@ export const TranslateContainer = forwardRef<
       </TouchableWithoutFeedback>
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          style={[styles.translateContainer, initialPosition, animationStyle]}
+          style={[
+            styles.translateContainer,
+            initialPosition,
+            containerStyle,
+            animationStyle,
+          ]}
+          onLayout={onLayout}
         >
-          <View style={[styles.container, containerStyle]} onLayout={onLayout}>
-            {children}
-          </View>
+          {children}
         </Animated.View>
       </GestureDetector>
     </View>

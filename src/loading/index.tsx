@@ -9,7 +9,11 @@ export const Loading: UniqueModal = {
   template: () => {
     // before add
     return (
-      <OpacityContainer mask={false} containerStyle={styles.container}>
+      <OpacityContainer
+        mask={false}
+        modal={true}
+        containerStyle={styles.container}
+      >
         <View style={styles.loadingContainer}>
           <ActivityIndicator color={'white'} />
         </View>
