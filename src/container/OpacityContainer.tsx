@@ -38,7 +38,6 @@ export const OpacityContainer = forwardRef<
     innerKey,
     containerStyle,
   } = props;
-
   const { remove, isExist } = useModal();
 
   const opacity = useSharedValue(0);

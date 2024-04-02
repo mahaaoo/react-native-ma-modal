@@ -20,7 +20,7 @@ const App: React.FC<{}> = () => {
       <Stack.Screen
         name="Modal"
         component={Home}
-        options={{ headerTitle: 'Modal', ...headerOptions }}
+        options={{ headerTitle: 'react-native-ma-modal', ...headerOptions }}
       />
     </Stack.Navigator>
   );

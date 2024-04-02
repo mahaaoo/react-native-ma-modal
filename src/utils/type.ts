@@ -157,7 +157,7 @@ export interface BaseContainerProps {
    */
   onDisappear?: () => void;
   /**
-   * 'none': Modal can't response event, can click view under Modal
+   * 'none': Total Modal View can't response event, u can click view under Modal
    * 'auto': Modal response evet
    */
   pointerEvents?: 'none' | 'auto';

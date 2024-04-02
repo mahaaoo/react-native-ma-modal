@@ -11,7 +11,7 @@ interface ModalListener {
 export const ModalUtil = {
   add: (children: React.ReactNode, key?: string) =>
     modalRef.current?.add(children, key) || '',
-  remove: (key: string) => modalRef.current?.remove(key),
+  remove: (key?: string) => modalRef.current?.remove(key),
   removeAll: () => modalRef.current?.removeAll(),
   isExist: (key: string) => modalRef.current?.isExist(key),
   listener: new Map(),

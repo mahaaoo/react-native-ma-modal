@@ -1,6 +1,12 @@
-import * as React from 'react';
-import { useState } from 'react';
-import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Switch,
+} from 'react-native';
 import {
   useModal,
   ModalUtil,
@@ -13,840 +19,340 @@ import {
   Loading,
   Toast,
 } from 'react-native-ma-modal';
-import { Extrapolate, interpolate } from 'react-native-reanimated';
-import Button from './Button';
-import Section from './Section';
+import { SubMidView, SubHeightView, SubWidthView } from './SubView';
+import { Options, NumberCount } from './OptionViews';
 
-const { width, height } = Dimensions.get('window');
+const ContainerList = [
+  'NormalContainer',
+  'OpacityContainer',
+  'ScaleContainer',
+  'DrawerContainer',
+  'TranslateContainer',
+];
+
+const confirmColor = '#1677FF';
 
 export default function OverlayExample() {
   const { add, remove, removeAll } = useModal();
   const elementIndex = React.useRef(0);
   const [isVisible, setVisible] = useState(false);
 
+  const [warp, setWarp] = useState(1);
+  const [canModal, setCanModal] = useState(false);
+  const [needMask, setNeedMask] = useState(true);
+  const [pointerEvents, setPointerEvents] = useState('auto'); // false: 'none', true: 'auto'
+  const [modalDuration, setModalDuration] = useState(250);
+
+  const [drawDirection, setDrawDirection] = useState('left');
+
+  const [gesture, setGesture] = useState(false);
+  const [tranOffset, setTranOffset] = useState(0);
+  const [tranDirection, setTranDirection] = useState('bottom');
+  const [tranRootAni, setTranRootAni] = useState('null');
+
+  const generalShow = useMemo(() => {
+    const name = ContainerList[warp];
+    const canShowList = [
+      'OpacityContainer',
+      'TranslateContainer',
+      'ScaleContainer',
+    ];
+    return canShowList.indexOf(name) !== -1 ? true : false;
+  }, [warp]);
+
   React.useEffect(() => {
     console.log('刷新Home');
     const listener = ModalUtil.addListener('onReady', (res: any) => {
       console.log('onReadyonReady', res);
-      setTimeout(() => {
-        Loading.hide?.();
-      }, 2000);
     });
+
     return () => {
       ModalUtil.removeListener(listener);
     };
   }, []);
 
+  const modalChildren = useMemo(() => {
+    let WarpView: any = View;
+    let props = {};
+    const name = ContainerList[warp];
+
+    if (name === 'NormalContainer') {
+      return (
+        <NormalContainer
+          containerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onAppear={() => {
+            console.log('onAppear');
+          }}
+          onDisappear={() => {
+            console.log('onDisappear');
+          }}
+        >
+          <SubMidView />
+        </NormalContainer>
+      );
+    }
+
+    let SubView: any = View;
+    switch (true) {
+      case name === 'OpacityContainer': {
+        WarpView = OpacityContainer;
+        SubView = SubMidView;
+        props = {
+          containerStyle: {
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        };
+        break;
+      }
+      case name === 'DrawerContainer': {
+        WarpView = DrawerContainer;
+        SubView = SubHeightView;
+        props = {
+          position: drawDirection,
+          // TODO: 当DrawerContainer默认rootAnimation设置为translateX， 不需要外部传入，不允许更改
+          rootAnimation: 'translateX',
+        };
+        break;
+      }
+      case name === 'TranslateContainer': {
+        WarpView = TranslateContainer;
+        SubView = SubWidthView;
+        if (tranDirection === 'left' || tranDirection === 'right') {
+          SubView = SubHeightView;
+        }
+        props = {
+          gesture: gesture,
+          offset: tranOffset,
+          from: tranDirection,
+          rootAnimation: tranRootAni,
+        };
+        break;
+      }
+      case name === 'ScaleContainer': {
+        WarpView = ScaleContainer;
+        SubView = SubMidView;
+        props = {};
+        break;
+      }
+    }
+
+    return (
+      <WarpView
+        modal={canModal}
+        mask={needMask}
+        duration={modalDuration}
+        pointerEvents={pointerEvents}
+        {...props}
+        onAppear={() => {
+          console.log('onAppear');
+        }}
+        onDisappear={() => {
+          console.log('onDisappear');
+        }}
+        onClickMask={() => {
+          console.log('onClickMask');
+        }}
+      >
+        <SubView />
+      </WarpView>
+    );
+  }, [
+    warp,
+    canModal,
+    needMask,
+    modalDuration,
+    pointerEvents,
+    drawDirection,
+    gesture,
+    tranOffset,
+    tranDirection,
+    tranRootAni,
+  ]);
+
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.paddingBottom}
-    >
-      <Section title="Close Modal">
-        <Button
-          onPress={() => {
-            remove();
-          }}
-        >
-          <Text>Delete Modal</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            removeAll();
-          }}
-        >
-          <Text>Delete All Modal</Text>
-        </Button>
-      </Section>
-
-      <Section title="Self Modal">
-        <Button
-          onPress={() => {
-            const index = add(
-              <View style={styles.marginTop}>
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-                <Text
-                  onPress={() => {
-                    remove(index);
-                  }}
-                  style={styles.close}
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={{ flexDirection: 'row', paddingVertical: 20 }}>
+            {ContainerList.map((name, index) => {
+              const bgColor = index === warp ? confirmColor : '#fff';
+              const textColor = index === warp ? '#fff' : '#333';
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.containerOption, { backgroundColor: bgColor }]}
+                  onPress={() => setWarp(index)}
                 >
-                  关闭
-                </Text>
-              </View>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>sub-modal-hook</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = ModalUtil.add(
-              <View style={styles.marginTop}>
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-                <Text
-                  onPress={() => {
-                    remove(index);
-                  }}
-                  style={styles.close}
-                >
-                  关闭
-                </Text>
-              </View>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>sub-modal-function</Text>
-        </Button>
-      </Section>
-
-      <Section title="NormalContainer">
-        <Button
-          onPress={() => {
-            add(
-              <NormalContainer
-                pointerEvents="none"
-                onAppear={() => {
-                  console.log('子视图已弹出');
-                }}
-                onDisappear={() => {
-                  console.log('子视图已消失');
-                }}
-              >
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-              </NormalContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>pointerEvents='none'</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = add(
-              <NormalContainer
-                onAppear={() => {
-                  console.log('子视图已弹出');
-                }}
-                onDisappear={() => {
-                  console.log('子视图已消失');
-                }}
-              >
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-                <Text
-                  onPress={() => {
-                    remove(index);
-                  }}
-                  style={styles.close}
-                >
-                  关闭
-                </Text>
-              </NormalContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>pointerEvents='auto'</Text>
-        </Button>
-      </Section>
-
-      <Section title="OpacityContainer">
-        <Button
-          onPress={() => {
-            add(
-              <OpacityContainer
-                onAppear={() => {
-                  console.log('子视图已弹出');
-                }}
-                onDisappear={() => {
-                  console.log('子视图已消失');
-                }}
-              >
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-              </OpacityContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>mask-close</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = add(
-              <OpacityContainer
-                modal={true}
-                onAppear={() => {
-                  console.log('子视图已弹出');
-                }}
-                onDisappear={() => {
-                  console.log('子视图已消失');
-                }}
-              >
-                <Text style={styles.childText}>
-                  子视图{elementIndex.current}
-                </Text>
-                <Text
-                  onPress={() => {
-                    remove(index);
-                  }}
-                  style={styles.close}
-                >
-                  关闭
-                </Text>
-              </OpacityContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>mask-no-close</Text>
-        </Button>
-      </Section>
-      <Section title="TranslateContainer" style={styles.section}>
-        <View style={styles.row}>
-          <Button
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer>
-                  <View style={[styles.bottom, { height: 330 }]}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  containerStyle={{ alignItems: 'center', marginLeft: 100 }}
-                  from="top"
-                  offset={(height - 200) / 2}
-                >
-                  <View style={styles.top}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Top</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer from="left">
-                  <View style={styles.left}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>,
-                'pop-view-left'
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Left</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  containerStyle={{ justifyContent: 'center', marginTop: 200 }}
-                  from="right"
-                  offset={-(width - 200) / 2}
-                >
-                  <View style={styles.tRight}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Right</Text>
-          </Button>
-        </View>
-        <View style={styles.viewContainer}>
-          <Button
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer gesture={true}>
-                  <View style={styles.bottom}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom-Gesture</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer from="left" gesture={true}>
-                  <View style={styles.left}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>,
-                'pop-view-left'
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Left-Gesture</Text>
-          </Button>
-        </View>
-        <View style={styles.viewContainer}>
-          <Button
-            onPress={() => {
-              const index = ModalUtil.add(
-                <TranslateContainer modal={true}>
-                  <View style={[styles.bottom, { height: 432 }]}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                    <Text
-                      onPress={() => {
-                        remove(index);
-                      }}
-                      style={styles.close}
-                    >
-                      关闭
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom-Modal</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer mask={false}>
-                  <View style={styles.bottom}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom-NoMask</Text>
-          </Button>
-        </View>
-        <View style={styles.viewContainer}>
-          <Button
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer rootAnimation={'scale'} gesture={true}>
-                  <View
-                    style={[
-                      styles.bottom,
-                      {
-                        height: height - 88,
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom-Scale</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  rootAnimation={['scale', 'borderRadius']}
-                  gesture={true}
-                >
-                  <View
-                    style={[
-                      styles.bottom,
-                      {
-                        height: height - 88,
-                        borderTopRightRadius: 10,
-                        borderTopLeftRadius: 10,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom-Scale-Border</Text>
-          </Button>
-        </View>
-        <View style={styles.viewContainer}>
-          <Button
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer rootAnimation={'rotateX'} gesture={true}>
-                  <View style={styles.bottom}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Bottom-RotateX</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  from="left"
-                  gesture={true}
-                  rootAnimation={'scale'}
-                >
-                  <View style={styles.left2}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Left-Scale</Text>
-          </Button>
-        </View>
-        <View style={styles.viewContainer}>
-          <Button
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  from="left"
-                  gesture={true}
-                  rootAnimation={'translateX'}
-                >
-                  <View style={styles.left2}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Left-Translate</Text>
-          </Button>
-          <Button
-            style={styles.marginLeft}
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  from="right"
-                  gesture={true}
-                  rootAnimation={'translateX'}
-                >
-                  <View style={styles.left2}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Right-Translate</Text>
-          </Button>
-        </View>
-        <View style={styles.viewContainer}>
-          <Button
-            onPress={() => {
-              ModalUtil.add(
-                <TranslateContainer
-                  from="left"
-                  gesture={true}
-                  rootAnimation={['scale', 'translateX']}
-                >
-                  <View style={styles.left2}>
-                    <Text style={styles.childText}>
-                      Funtion子视图{elementIndex.current}
-                    </Text>
-                  </View>
-                </TranslateContainer>
-              );
-              elementIndex.current++;
-            }}
-          >
-            <Text>Left-Translate-Scale</Text>
-          </Button>
-        </View>
-      </Section>
-
-      <Section title="DrawerContainer">
-        <Button
-          onPress={() => {
-            const index = ModalUtil.add(
-              <DrawerContainer rootAnimation={['translateX']} position="left">
-                <View style={styles.left2}>
-                  <Text style={styles.childText}>
-                    Funtion子视图{elementIndex.current}
-                  </Text>
                   <Text
-                    onPress={() => {
-                      remove(index);
-                    }}
-                    style={styles.close}
+                    style={[styles.containerOptionText, { color: textColor }]}
                   >
-                    关闭
+                    {name}
                   </Text>
-                </View>
-              </DrawerContainer>,
-              'draw-view-left'
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Left</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = ModalUtil.add(
-              <DrawerContainer rootAnimation={'translateX'} position="right">
-                <View style={styles.right}>
-                  <Text style={styles.childText}>
-                    Funtion子视图{elementIndex.current}
-                  </Text>
-                  <Text
-                    onPress={() => {
-                      remove(index);
-                    }}
-                    style={styles.close}
-                  >
-                    关闭
-                  </Text>
-                </View>
-              </DrawerContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Right</Text>
-        </Button>
-      </Section>
-      <Section title="ScaleContainer">
-        <Button
-          onPress={() => {
-            add(
-              <ScaleContainer>
-                <View style={styles.scaleContainer}>
-                  <Text>子视图{elementIndex.current}</Text>
-                </View>
-              </ScaleContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Scale</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            const index = add(
-              <ScaleContainer modal={true}>
-                <View style={styles.scaleContainer}>
-                  <Text>子视图{elementIndex.current}</Text>
-                  <Text
-                    onPress={() => {
-                      remove(index);
-                    }}
-                    style={styles.close}
-                  >
-                    关闭
-                  </Text>
-                </View>
-              </ScaleContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Scale-Close</Text>
-        </Button>
-      </Section>
-      <Section title="Modal-Component">
-        <Modal isVisible={isVisible}>
-          <ScaleContainer modal={true}>
-            <View style={styles.scaleContainer}>
-              <Text>子视图{elementIndex.current}</Text>
-              <Text
-                onPress={() => {
-                  setVisible(false);
-                }}
-                style={styles.close}
-              >
-                关闭
-              </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </ScrollView>
+        {generalShow ? (
+          <View>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>Need Mask</Text>
+              <Switch
+                value={needMask}
+                trackColor={{ true: confirmColor }}
+                onValueChange={() => setNeedMask((e) => !e)}
+              />
             </View>
-          </ScaleContainer>
-        </Modal>
-        <Button
-          onPress={() => {
-            setVisible(true);
-            elementIndex.current++;
-          }}
-        >
-          <Text>Modal-Component</Text>
-        </Button>
-      </Section>
-      <Section title="User-Define-MainView-Animation">
-        <Button
-          onPress={() => {
-            ModalUtil.add(
-              <TranslateContainer
-                gesture={true}
-                doAnimation={(progress) => {
-                  'worklet';
-                  return {
-                    overflow: 'hidden',
-                    borderRadius: interpolate(
-                      progress.value,
-                      [0, 1],
-                      [0, 50],
-                      Extrapolate.CLAMP
-                    ),
-                    transform: [
-                      {
-                        scale: interpolate(
-                          progress.value,
-                          [0, 1],
-                          [1, 0.7],
-                          Extrapolate.CLAMP
-                        ),
-                      },
-                    ],
-                  };
-                }}
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>Can't Click Mask Close</Text>
+              <Switch
+                value={canModal}
+                trackColor={{ true: confirmColor }}
+                onValueChange={() => setCanModal((e) => !e)}
+              />
+            </View>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>Modal View Can Response</Text>
+              <Options
+                options={['auto', 'none']}
+                current={pointerEvents}
+                onSelect={setPointerEvents}
+              />
+            </View>
+          </View>
+        ) : null}
+        {ContainerList[warp] !== 'NormalContainer' ? (
+          <View style={styles.switchContainer}>
+            <Text style={{ fontSize: 16 }}>Duration(ms)</Text>
+            <NumberCount
+              minus={() => {
+                setModalDuration((e) => {
+                  if (e - 200 > 0) {
+                    return e - 200;
+                  }
+                  return e;
+                });
+              }}
+              plus={() => setModalDuration((e) => e + 200)}
+              current={modalDuration}
+            />
+          </View>
+        ) : null}
+        {ContainerList[warp] === 'DrawerContainer' ? (
+          <View style={styles.switchContainer}>
+            <Text style={{ fontSize: 16 }}>Drawer Direction</Text>
+            <Options
+              options={['left', 'right']}
+              current={drawDirection}
+              onSelect={setDrawDirection}
+            />
+          </View>
+        ) : null}
+        {ContainerList[warp] === 'TranslateContainer' ? (
+          <>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>Gesture Close</Text>
+              <Switch
+                value={gesture}
+                trackColor={{ true: confirmColor }}
+                onValueChange={() => setGesture((e) => !e)}
+              />
+            </View>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>Modal View Offset</Text>
+              <NumberCount
+                minus={() => setTranOffset((e) => e - 100)}
+                plus={() => setTranOffset((e) => e + 100)}
+                current={tranOffset}
+              />
+            </View>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>Translate From</Text>
+              <Options
+                options={['bottom', 'left', 'top', 'right']}
+                current={tranDirection}
+                onSelect={setTranDirection}
+              />
+            </View>
+            <View
+              style={{
+                paddingHorizontal: 10,
+                marginVertical: 10,
+              }}
+            >
+              <Text style={{ fontSize: 16 }}>RootAnimation</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginTop: 10 }}
               >
-                <View
-                  style={[
-                    styles.bottom,
-                    {
-                      height: 500,
-                      borderTopRightRadius: 10,
-                      borderTopLeftRadius: 10,
-                    },
+                <Options
+                  options={[
+                    'null',
+                    'translateX',
+                    'scale',
+                    'rotateX',
+                    'borderRadius',
                   ]}
-                >
-                  <Text style={styles.childText}>
-                    Funtion子视图{elementIndex.current}
-                  </Text>
-                </View>
-              </TranslateContainer>
-            );
-            elementIndex.current++;
-          }}
-        >
-          <Text>Bottom-Scale</Text>
-        </Button>
-      </Section>
-      <Section title="Loading&Toast">
-        <Button
-          onPress={() => {
-            Loading.show();
-          }}
-        >
-          <Text>Loading</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            Toast.show('alert');
-          }}
-        >
-          <Text>Toast</Text>
-        </Button>
-      </Section>
-      <Section title="Add Function Component">
-        <Button
-          onPress={() => {
-            /**
-             * 由于Function Component不能直接添加ref，所以在add的时候，必须用提供的组件包裹，否则会报如下错误
-             *  ERROR  Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
-             */
-            add(
-              <TranslateContainer>
-                <FunctionComponent />
-              </TranslateContainer>
-            );
-          }}
-        >
-          <Text>Function Component</Text>
-        </Button>
-        <Button
-          style={styles.marginLeft}
-          onPress={() => {
-            /**
-             * 由于Function Component不能直接添加ref，所以在add的时候，必须用提供的组件包裹，否则会报如下错误
-             *  ERROR  Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
-             */
-            add(
-              <TranslateContainer>
-                <ClComponet />
-              </TranslateContainer>
-            );
-          }}
-        >
-          <Text>Class Component</Text>
-        </Button>
-      </Section>
-    </ScrollView>
-  );
-}
-
-const FunctionComponent = () => {
-  return (
-    <View style={[styles.bottom, { height: 330 }]}>
-      <Text style={styles.childText}>Funtion子视图</Text>
+                  current={tranRootAni}
+                  onSelect={setTranRootAni}
+                />
+              </ScrollView>
+            </View>
+          </>
+        ) : null}
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => {
+          add(modalChildren);
+        }}
+        style={styles.showModalButton}
+      >
+        <Text style={styles.showModalText}>Show Modal</Text>
+      </TouchableOpacity>
     </View>
   );
-};
-
-class ClComponet extends React.Component {
-  render() {
-    return (
-      <View style={[styles.bottom, { height: 330 }]}>
-        <Text style={styles.childText}>Funtion子视图</Text>
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  paddingBottom: {
-    paddingBottom: 50,
-  },
-  marginTop: {
-    marginTop: 100,
-  },
-  marginLeft: {
-    marginLeft: 15,
-  },
-  childText: {
-    marginTop: 100,
-    fontSize: 24,
-  },
-  close: {
-    marginTop: 20,
-    fontSize: 24,
-  },
-  bottom: {
-    height: 500,
-    width,
+  containerOption: {
     backgroundColor: '#fff',
+    marginHorizontal: 10,
+    padding: 15,
+    borderRadius: 15,
   },
-  top: {
-    height: 200,
-    width: 200,
-    borderRadius: 10,
-    backgroundColor: '#fff',
+  containerOptionText: {
+    fontSize: 16,
+    color: '#333',
   },
-  left: {
-    height,
-    width: 200,
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  tRight: {
-    width: 200,
-    height: 200,
-    // flex: 1,
-    backgroundColor: '#fff',
-  },
-  viewContainer: {
-    flexDirection: 'row',
-    marginTop: 15,
-  },
-  left2: {
-    height,
-    width: 300,
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  right: {
-    width: 220,
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  section: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  scaleContainer: {
-    width: 150,
-    height: 150,
-    backgroundColor: 'white',
+  showModalButton: {
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    right: 0,
+    height: 80,
+    paddingBottom: 20,
+    backgroundColor: confirmColor,
+  },
+  showModalText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  switchContainer: {
+    paddingHorizontal: 10,
+    marginVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
