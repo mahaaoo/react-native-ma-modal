@@ -37,7 +37,8 @@ export const Toast: UniqueModal = {
       }, duration);
     }
   },
-  isExist: () => ModalUtil.isExist(Toast.key || ''),
+  hide: () => {},
+  isExist: () => ModalUtil.isExist(Toast.key || '') || false,
 };
 
 const styles = StyleSheet.create({

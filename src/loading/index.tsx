@@ -24,7 +24,7 @@ export const Loading: UniqueModal = {
     ModalUtil.add(Loading.template(), Loading.key);
   },
   hide: () => ModalUtil.remove(Loading.key || ''),
-  isExist: () => ModalUtil.isExist(Loading.key || ''),
+  isExist: () => ModalUtil.isExist(Loading.key || '') || false,
 };
 
 const styles = StyleSheet.create({

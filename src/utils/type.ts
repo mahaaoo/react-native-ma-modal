@@ -1,6 +1,6 @@
 import { createContext, createRef, MutableRefObject } from 'react';
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import Animated, { AnimateStyle } from 'react-native-reanimated';
+import Animated, { AnimateStyle, SharedValue } from 'react-native-reanimated';
 import { RootAnimationType } from './RootViewAnimations';
 
 export interface ModalProps {
@@ -56,15 +56,15 @@ export interface ModalAnimatedContextProps {
   /**
    * 动画初始值
    */
-  initialValue: Animated.SharedValue<number>;
+  initialValue: SharedValue<number>;
   /**
    * 当前动画进度
    */
-  progress: Animated.SharedValue<number>;
+  progress: SharedValue<number>;
   /**
    * 目标动画值
    */
-  targetValue: Animated.SharedValue<number>;
+  targetValue: SharedValue<number>;
   /**
    * Modal全局控制默认配置项
    */
@@ -128,8 +128,8 @@ export interface ModalProviderProps {
 export const modalRef = createRef<ModalRef>();
 
 export type ModalMainAnimatedFunc = (
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
+  progress: SharedValue<number>,
+  targetValue: SharedValue<number>
 ) => AnimateStyle<ViewStyle | ImageStyle | TextStyle>;
 /**
  * All Modal Container Must exntent this interface
@@ -271,7 +271,7 @@ export interface UniqueModal {
    * 隐藏
    * @returns
    */
-  hide?: () => void;
+  hide: () => void;
   /**
    * 当前Modal是否已经弹出
    * @returns

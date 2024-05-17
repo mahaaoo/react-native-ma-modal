@@ -3,6 +3,7 @@ import Animated, {
   Extrapolate,
   interpolate,
   AnimateStyle,
+  SharedValue,
 } from 'react-native-reanimated';
 import { mergeStyle } from './util';
 const { height } = Dimensions.get('window');
@@ -13,7 +14,7 @@ const addDeg = (deg: number): string => {
 };
 
 export const scaleAnimation = (
-  progress: Animated.SharedValue<number>
+  progress: SharedValue<number>
 ): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
@@ -31,8 +32,8 @@ export const scaleAnimation = (
 };
 
 export const translateXAnimation = (
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
+  progress: SharedValue<number>,
+  targetValue: SharedValue<number>
 ): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
@@ -50,7 +51,7 @@ export const translateXAnimation = (
 };
 
 export const rotateXAnimation = (
-  progress: Animated.SharedValue<number>
+  progress: SharedValue<number>
 ): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
@@ -82,7 +83,7 @@ export const rotateXAnimation = (
 };
 
 export const borderRadiusAnimation = (
-  progress: Animated.SharedValue<number>
+  progress: SharedValue<number>
 ): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   return {
@@ -105,41 +106,39 @@ export type RootAnimationType =
 
 const TypeToAnimation: {
   [key in RootAnimationType]: (
-    progress: Animated.SharedValue<number>,
-    targetValue: Animated.SharedValue<number>
+    progress: SharedValue<number>,
+    targetValue: SharedValue<number>
   ) => AnimateStyle<ViewStyle | ImageStyle | TextStyle>;
 } = {
   'null': () => {
     'worklet';
     return {};
   },
-  'scale': (progress: Animated.SharedValue<number>) => {
+  'scale': (progress: SharedValue<number>) => {
     'worklet';
     return scaleAnimation(progress);
   },
   'translateX': (
-    progress: Animated.SharedValue<number>,
-    targetValue: Animated.SharedValue<number>
+    progress: SharedValue<number>,
+    targetValue: SharedValue<number>
   ) => {
     'worklet';
     return translateXAnimation(progress, targetValue);
   },
-  'rotateX': (progress: Animated.SharedValue<number>) => {
+  'rotateX': (progress: SharedValue<number>) => {
     'worklet';
     return rotateXAnimation(progress);
   },
-  'borderRadius': (progress: Animated.SharedValue<number>) => {
+  'borderRadius': (progress: SharedValue<number>) => {
     'worklet';
     return borderRadiusAnimation(progress);
   },
 };
 
 export const configAnimation = (
-  mainViewAnimation: Animated.SharedValue<
-    RootAnimationType | Array<RootAnimationType>
-  >,
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
+  mainViewAnimation: SharedValue<RootAnimationType | Array<RootAnimationType>>,
+  progress: SharedValue<number>,
+  targetValue: SharedValue<number>
 ): AnimateStyle<ViewStyle | ImageStyle | TextStyle> => {
   'worklet';
   let style: AnimateStyle<ViewStyle | ImageStyle | TextStyle> = {
