@@ -35,6 +35,7 @@ export const ScaleContainer = forwardRef<
     innerKey,
   } = props;
   const { remove, isExist } = useModal();
+  const { progress } = useModalAnimated();
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.5);
 
@@ -47,6 +48,7 @@ export const ScaleContainer = forwardRef<
     scale.value = withTiming(1, { duration }, () => {
       onAppear && runOnJS(onAppear)();
     });
+    progress.value = withTiming(1, { duration });
   }, [onAppear]);
 
   const unMount = useCallback(() => {
@@ -54,6 +56,7 @@ export const ScaleContainer = forwardRef<
     scale.value = withTiming(0.5, { duration }, () => {
       onDisappear && runOnJS(onDisappear)();
     });
+    progress.value = withTiming(0, { duration });
   }, [onDisappear]);
 
   const animationStyle = useAnimatedStyle(() => {

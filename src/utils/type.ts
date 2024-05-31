@@ -58,7 +58,7 @@ export interface ModalAnimatedContextProps {
    */
   initialValue: SharedValue<number>;
   /**
-   * 当前动画进度
+   * 当前动画进度, apper：0->1，disappear：1->0
    */
   progress: SharedValue<number>;
   /**

@@ -39,14 +39,12 @@ export const OpacityContainer = forwardRef<
     containerStyle,
   } = props;
   const { remove, isExist } = useModal();
+  const { progress } = useModalAnimated();
 
   const opacity = useSharedValue(0);
 
   useEffect(() => {
     mount();
-    return () => {
-      onDisappear && onDisappear();
-    };
   }, []);
 
   const mount = useCallback(() => {
@@ -57,7 +55,15 @@ export const OpacityContainer = forwardRef<
         onAppear && runOnJS(onAppear)();
       }
     );
+    progress.value = withTiming(1, { duration });
   }, [onAppear]);
+
+  const unMount = useCallback(() => {
+    opacity.value = withTiming(0, { duration }, () => {
+      onDisappear && runOnJS(onDisappear)();
+    });
+    progress.value = withTiming(0, { duration });
+  }, [onDisappear]);
 
   const animationStyle = useAnimatedStyle(() => {
     return {
@@ -80,6 +86,7 @@ export const OpacityContainer = forwardRef<
     ref,
     () => ({
       mount,
+      unMount,
     }),
     []
   );

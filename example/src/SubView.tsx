@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, Text } from 'react-native';
-import { ModalUtil } from 'react-native-ma-modal';
+import { ModalUtil, useModalAnimated } from 'react-native-ma-modal';
+import { useAnimatedReaction } from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window');
 
@@ -8,6 +9,14 @@ interface SubWidthViewProps {}
 
 const SubWidthView: React.FC<SubWidthViewProps> = (props) => {
   const {} = props;
+  const { progress } = useModalAnimated();
+
+  useAnimatedReaction(
+    () => progress.value,
+    (value) => {
+      console.log(value);
+    }
+  );
 
   return (
     <View style={[styles.widthContainer]}>
@@ -48,6 +57,14 @@ interface SubMidViewProps {}
 
 const SubMidView: React.FC<SubMidViewProps> = (props) => {
   const {} = props;
+  const { progress } = useModalAnimated();
+
+  useAnimatedReaction(
+    () => progress.value,
+    (value) => {
+      console.log(value);
+    }
+  );
 
   return (
     <View style={[styles.midContainer]}>
