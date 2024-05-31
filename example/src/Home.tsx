@@ -15,7 +15,6 @@ import {
   OpacityContainer,
   DrawerContainer,
   ScaleContainer,
-  Modal,
   Loading,
   Toast,
 } from 'react-native-ma-modal';
@@ -28,6 +27,8 @@ const ContainerList = [
   'ScaleContainer',
   'DrawerContainer',
   'TranslateContainer',
+  'Toast',
+  'Loading',
 ];
 
 const confirmColor = '#1677FF';
@@ -49,6 +50,10 @@ export default function OverlayExample() {
   const [tranOffset, setTranOffset] = useState(0);
   const [tranDirection, setTranDirection] = useState('bottom');
   const [tranRootAni, setTranRootAni] = useState('null');
+
+  const [offsetX, setOffsetX] = useState(0);
+  const [offsetY, setOffsetY] = useState(0);
+  const [anchor, setAnchor] = useState('center');
 
   const generalShow = useMemo(() => {
     const name = ContainerList[warp];
@@ -135,7 +140,11 @@ export default function OverlayExample() {
       case name === 'ScaleContainer': {
         WarpView = ScaleContainer;
         SubView = SubMidView;
-        props = {};
+        props = {
+          offsetX,
+          offsetY,
+          anchor,
+        };
         break;
       }
     }
@@ -171,6 +180,9 @@ export default function OverlayExample() {
     tranOffset,
     tranDirection,
     tranRootAni,
+    offsetX,
+    offsetY,
+    anchor,
   ]);
 
   return (
@@ -225,7 +237,8 @@ export default function OverlayExample() {
             </View>
           </View>
         ) : null}
-        {ContainerList[warp] !== 'NormalContainer' ? (
+        {ContainerList[warp] !== 'NormalContainer' &&
+        ContainerList[warp] !== 'Toast' ? (
           <View style={styles.switchContainer}>
             <Text style={{ fontSize: 16 }}>Duration(ms)</Text>
             <NumberCount
@@ -305,10 +318,68 @@ export default function OverlayExample() {
             </View>
           </>
         ) : null}
+        {ContainerList[warp] === 'ScaleContainer' ? (
+          <>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>OffsetX</Text>
+              <NumberCount
+                minus={() => setOffsetX((e) => e - 50)}
+                plus={() => setOffsetX((e) => e + 50)}
+                current={offsetX}
+              />
+            </View>
+            <View style={styles.switchContainer}>
+              <Text style={{ fontSize: 16 }}>OffsetY</Text>
+              <NumberCount
+                minus={() => setOffsetY((e) => e - 50)}
+                plus={() => setOffsetY((e) => e + 50)}
+                current={offsetY}
+              />
+            </View>
+            <View
+              style={{
+                paddingHorizontal: 10,
+                marginVertical: 10,
+              }}
+            >
+              <Text style={{ fontSize: 16 }}>anchor</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginTop: 10 }}
+              >
+                <Options
+                  options={[
+                    'center',
+                    'left',
+                    'right',
+                    'top',
+                    'bottom',
+                    'left-top',
+                    'left-bottom',
+                    'right-top',
+                    'right-bottom',
+                  ]}
+                  current={anchor}
+                  onSelect={setAnchor}
+                />
+              </ScrollView>
+            </View>
+          </>
+        ) : null}
       </ScrollView>
       <TouchableOpacity
         onPress={() => {
-          add(modalChildren);
+          if (ContainerList[warp] === 'Toast') {
+            Toast.show('this is toast');
+          } else if (ContainerList[warp] === 'Loading') {
+            Loading.show();
+            setTimeout(() => {
+              Loading.hide();
+            }, modalDuration);
+          } else {
+            add(modalChildren);
+          }
         }}
         style={styles.showModalButton}
       >

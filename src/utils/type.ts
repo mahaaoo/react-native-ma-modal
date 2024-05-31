@@ -1,6 +1,6 @@
 import { createContext, createRef, MutableRefObject } from 'react';
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import Animated, { AnimateStyle, SharedValue } from 'react-native-reanimated';
+import { AnimateStyle, SharedValue } from 'react-native-reanimated';
 import { RootAnimationType } from './RootViewAnimations';
 
 export interface ModalProps {
@@ -225,7 +225,25 @@ export interface ScaleContainerRef {
   mount: (callback?: () => void) => void;
   unMount: (callback?: () => void) => void;
 }
-export interface ScaleContainerProps extends AnimationContainerProps {}
+
+export type ScaleAnchorType =
+  | 'center'
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'left-top'
+  | 'left-bottom'
+  | 'right-top'
+  | 'right-bottom';
+export interface ScaleContainerProps extends AnimationContainerProps {
+  // 弹出位置相对于中心点的水平偏移
+  offsetX?: number;
+  // 弹出位置相对于中心点的竖直偏移
+  offsetY?: number;
+  // 弹出动画初始位置
+  anchor?: ScaleAnchorType;
+}
 
 export interface TranslateContainerProps extends AnimationContainerProps {
   /**

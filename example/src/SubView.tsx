@@ -9,14 +9,14 @@ interface SubWidthViewProps {}
 
 const SubWidthView: React.FC<SubWidthViewProps> = (props) => {
   const {} = props;
-  const { progress } = useModalAnimated();
+  // const { progress } = useModalAnimated();
 
-  useAnimatedReaction(
-    () => progress.value,
-    (value) => {
-      console.log(value);
-    }
-  );
+  // useAnimatedReaction(
+  //   () => progress.value,
+  //   (value) => {
+  //     console.log(value);
+  //   }
+  // );
 
   return (
     <View style={[styles.widthContainer]}>
@@ -62,7 +62,7 @@ const SubMidView: React.FC<SubMidViewProps> = (props) => {
   useAnimatedReaction(
     () => progress.value,
     (value) => {
-      console.log(value);
+      // console.log(value);
     }
   );
 
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   midContainer: {
     backgroundColor: '#fff',
-    padding: 30,
+    padding: 50,
     alignItems: 'center',
     borderRadius: 10,
   },

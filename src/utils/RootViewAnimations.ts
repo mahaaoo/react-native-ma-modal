@@ -1,5 +1,5 @@
 import { Dimensions, ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import Animated, {
+import {
   Extrapolate,
   interpolate,
   AnimateStyle,
