@@ -26,6 +26,7 @@ export const ModalElements = forwardRef<ModalElementsRef, ModalElementsProps>(
           const pointerEvents = node.element.props.pointerEvents || 'auto';
           let extraStyle = {};
           // DrawerContainer's View will below the MainView
+          // 在新版RN76中，似乎zIndex: -10不生效。目前尚不清楚是expo的问题还是RN本身的问题
           if (node.element.type.displayName === 'DrawerContainer') {
             extraStyle = { zIndex: -10 };
           }
