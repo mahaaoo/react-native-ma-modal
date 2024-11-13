@@ -71,9 +71,8 @@ export interface ModalAnimatedContextProps {
   config: ModalConfig;
 }
 
-export const ModalAnimatedContext = createContext(
-  {} as ModalAnimatedContextProps
-);
+export const ModalAnimatedContext =
+  createContext<ModalAnimatedContextProps | null>(null);
 
 export interface ModalElementsRef {
   /**
@@ -113,7 +112,7 @@ export interface ModalRef {
   isExist: (key: string) => boolean;
 }
 
-export const ModalContext = createContext({} as ModalRef);
+export const ModalContext = createContext<ModalRef | null>(null);
 
 export interface ModalProviderProps {
   children: React.ReactNode;

@@ -9,11 +9,34 @@ interface ModalListener {
 }
 
 export const ModalUtil = {
-  add: (children: React.ReactNode, key?: string) =>
-    modalRef.current?.add(children, key) || '',
-  remove: (key?: string) => modalRef.current?.remove(key),
-  removeAll: () => modalRef.current?.removeAll(),
-  isExist: (key: string) => modalRef.current?.isExist(key),
+  add: (children: React.ReactNode, key?: string) => {
+    if (modalRef && modalRef.current) {
+      modalRef.current?.add(children, key) || '';
+    } else {
+      throw new Error('ModalUtil must set modalRef at ModalProvider');
+    }
+  },
+  remove: (key?: string) => {
+    if (modalRef && modalRef.current) {
+      modalRef.current?.remove(key);
+    } else {
+      throw new Error('ModalUtil must set modalRef at ModalProvider');
+    }
+  },
+  removeAll: () => {
+    if (modalRef && modalRef.current) {
+      modalRef.current?.removeAll();
+    } else {
+      throw new Error('ModalUtil must set modalRef at ModalProvider');
+    }
+  },
+  isExist: (key: string) => {
+    if (modalRef && modalRef.current) {
+      modalRef.current?.isExist(key);
+    } else {
+      throw new Error('ModalUtil must set modalRef at ModalProvider');
+    }
+  },
   listener: new Map(),
   index: 0,
   addListener: (eventName: string, callback: Function): ModalListener => {

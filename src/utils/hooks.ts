@@ -21,8 +21,20 @@ export const useForceUpdate = () => {
 /**
  * 操作modal显示/隐藏
  */
-export const useModal = () => useContext(ModalContext);
+export const useModal = () => {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error('react-native-ma-modal must warpper with ModalProvider');
+  }
+  return context;
+};
 /**
  * 与modal显示/隐藏动画相关参数
  */
-export const useModalAnimated = () => useContext(ModalAnimatedContext);
+export const useModalAnimated = () => {
+  const context = useContext(ModalAnimatedContext);
+  if (!context) {
+    throw new Error('react-native-ma-modal must warpper with ModalProvider');
+  }
+  return context;
+};
