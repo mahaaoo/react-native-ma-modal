@@ -6,7 +6,7 @@ This component is a react-native popup component implemented using TypeScript, w
 
 | <img src="./screenshot/opacity.gif" width="250"> | <img src="./screenshot/scale.gif" width="250"> |<img src="./screenshot/drawer.gif" width="250">  |
 |-|-|-|
-|  <img src="./screenshot/trans-1.gif" width="250">   |   <img src="./screenshot/trans-2.gif" width="250">   |   <img src="./screenshot/eas.svg" width="250">  |
+|  <img src="./screenshot/trans-1.gif" width="250">   |   <img src="./screenshot/trans-2.gif" width="250">   |   <img src="./screenshot/qrcode.png" width="250">  |
 
 ## install
 
